@@ -1,0 +1,978 @@
+# depslib dependency file v1.0
+1453248077 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\forms_timer.cxx
+	<FL/Fl.H>
+	<FL/fl_draw.H>
+	<FL/forms.H>
+	"Fl_TimerSimple.H"
+	<time.h>
+	<sys/types.h>
+	<sys/timeb.h>
+	<time.h>
+	<sys/time.h>
+	<stdio.h>
+
+1460362473 
+
+1453247459 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\fl_timersimple.h
+	"Fl_Widget.H"
+
+1453247459 .H"
+
+1460362142 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\main.cpp
+	<getopt.h>
+	"MainWindow.h"
+	<windows.h>
+	<stdio.h>
+
+1460369271 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\mainwindow.h
+	<stdio.h>
+	<sys/time.h>
+	<time.h>
+	<FL/Fl.H>
+	<FL/Fl_Tabs.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Group.H>
+	<FL/Fl_Pack.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Radio_Round_Button.H>
+	<FL/Fl_File_Input.H>
+	<FL/Fl_Double_Window.H>
+	<FL/filename.H>
+	<FL/Fl_Preferences.H>
+	"Fl_TimerSimple.H"
+	"SerialWin.h"
+	"Serial.h"
+	"Plots.h"
+	"WinMouseMonitor.h"
+
+1460363187 onitor.h"
+
+1456120583 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\serialwin.h
+	<stdio.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+	"rs232.h"
+
+1450525942 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<sys/file.h>
+	<windows.h>
+
+1450525942 >
+
+1453275836 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\serial.h
+	<stdio.h>
+	<unistd.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+
+1453275836 .H>
+
+1453260442 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\plots.h
+	<FL/Fl_Group.H>
+	<FL/Fl_Chart.H>
+	<stdio.h>
+
+1460441880 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\mainwindow.cpp
+	"MainWindow.h"
+
+1460441880 w.h"
+
+1453260442 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\plots.cpp
+	"Plots.h"
+
+1453180794 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\rs232.c
+	"rs232.h"
+
+1456120380 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\serialwin.cpp
+	"SerialWin.h"
+
+1456120380 .h"
+
+1460362473 c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\winmousemonitor.h
+	<windows.h>
+	<stdio.h>
+
+1460363187 source:c:\vincent\melbourne\shouldertrackingimus\shouldertrackinglog\src\winmousemonitor.cpp
+	"WinMouseMonitor.h"
+
+1453248077 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/forms_timer.cxx
+	<FL/Fl.H>
+	<FL/fl_draw.H>
+	<FL/forms.H>
+	"Fl_TimerSimple.H"
+	<time.h>
+	<sys/types.h>
+	<sys/timeb.h>
+	<time.h>
+	<sys/time.h>
+	<stdio.h>
+
+1462173222 /usr/local/include/FL/Fl.H
+	<FL/Fl_Cairo.H>
+	"fl_utf8.h"
+	"Enumerations.H"
+
+1462173222 /usr/local/include/FL/Fl_Cairo.H
+	<FL/Fl_Export.H>
+	<cairo-xlib.h>
+	<cairo-win32.h>
+	<cairo-quartz.h>
+
+1462173223 /usr/local/include/FL/Fl_Export.H
+
+1462173223 /usr/local/include/FL/fl_utf8.h
+	"Fl_Export.H"
+	"fl_types.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<locale.h>
+	<ctype.h>
+	<wchar.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<X11/Xlocale.h>
+	<X11/Xlib.h>
+	<locale.h>
+
+1462173223 /usr/local/include/FL/fl_types.h
+
+1462173222 /usr/local/include/FL/Enumerations.H
+	"Fl_Export.H"
+	"fl_types.h"
+
+1462173223 /usr/local/include/FL/fl_draw.H
+	<FL/x.H>
+	<FL/Enumerations.H>
+	<FL/Fl_Window.H>
+	<FL/Fl_Device.H>
+
+1462173223 /usr/local/include/FL/x.H
+	"Enumerations.H"
+	"win32.H"
+	"mac.H"
+	<X11/Xlib.h>
+	<X11/Xutil.h>
+	<X11/Xatom.h>
+	"Fl_Window.H"
+
+1462173223 /usr/local/include/FL/win32.H
+	<windows.h>
+	<FL/Fl_Window.H>
+
+1462173223 /usr/local/include/FL/Fl_Window.H
+	<windows.h>
+	"Fl_Group.H"
+	"Fl_Bitmap.H"
+	<stdlib.h>
+
+1462173223 /usr/local/include/FL/Fl_Group.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/Fl_Widget.H
+	"Enumerations.H"
+	<stdint.h>
+	<stddef.h>
+
+1462173222 /usr/local/include/FL/Fl_Bitmap.H
+	"Fl_Image.H"
+
+1462173223 /usr/local/include/FL/Fl_Image.H
+	"Enumerations.H"
+	<stdlib.h>
+
+1462173223 /usr/local/include/FL/mac.H
+	<FL/Fl_Widget.H>
+	<ApplicationServices/ApplicationServices.h>
+	"Fl_Window.H"
+	"../src/Fl_Font.H"
+
+1462173223 /usr/local/include/FL/Fl_Device.H
+	<FL/x.H>
+	<FL/Fl_Plugin.H>
+	<FL/Fl_Image.H>
+	<FL/Fl_Bitmap.H>
+	<FL/Fl_Pixmap.H>
+	<FL/Fl_RGB_Image.H>
+	<stdlib.h>
+
+1462173223 /usr/local/include/FL/Fl_Plugin.H
+	"Fl_Preferences.H"
+
+1462173223 /usr/local/include/FL/Fl_Preferences.H
+	<stdio.h>
+	"Fl_Export.H"
+
+1462173223 /usr/local/include/FL/Fl_Pixmap.H
+	"Fl_Image.H"
+	"x.H"
+
+1462173223 /usr/local/include/FL/Fl_RGB_Image.H
+	"Fl_Image.H"
+
+1462173223 /usr/local/include/FL/forms.H
+	"Fl.H"
+	"Fl_Group.H"
+	"Fl_Window.H"
+	"fl_draw.H"
+	"Fl_FormsBitmap.H"
+	"Fl_FormsPixmap.H"
+	"Fl_Box.H"
+	"Fl_Browser.H"
+	"Fl_Button.H"
+	"Fl_Light_Button.H"
+	"Fl_Round_Button.H"
+	"Fl_Check_Button.H"
+	"Fl_Chart.H"
+	"Fl_Choice.H"
+	"Fl_Clock.H"
+	"Fl_Counter.H"
+	"Fl_Dial.H"
+	"Fl_Free.H"
+	"fl_ask.H"
+	"fl_show_colormap.H"
+	"filename.H"
+	"Fl_File_Chooser.H"
+	"Fl_Input.H"
+	"Fl_Menu_Button.H"
+	"Fl_Positioner.H"
+	"Fl_Slider.H"
+	"Fl_Value_Slider.H"
+	"Fl_Timer.H"
+
+1462173223 /usr/local/include/FL/Fl_FormsBitmap.H
+	"Fl_Bitmap.H"
+
+1462173223 /usr/local/include/FL/Fl_FormsPixmap.H
+	"Fl_Pixmap.H"
+
+1462173222 /usr/local/include/FL/Fl_Box.H
+	"Fl_Widget.H"
+
+1462173222 /usr/local/include/FL/Fl_Browser.H
+	"Fl_Browser_.H"
+	"Fl_Image.H"
+
+1462173222 /usr/local/include/FL/Fl_Browser_.H
+	"Fl_Group.H"
+	"Fl_Scrollbar.H"
+	<FL/Fl.H>
+
+1462173223 /usr/local/include/FL/Fl_Scrollbar.H
+	"Fl_Slider.H"
+
+1462173223 /usr/local/include/FL/Fl_Slider.H
+	"Fl_Valuator.H"
+
+1462173223 /usr/local/include/FL/Fl_Valuator.H
+	"Fl_Widget.H"
+
+1462173222 /usr/local/include/FL/Fl_Button.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/Fl_Light_Button.H
+	"Fl_Button.H"
+
+1462173223 /usr/local/include/FL/Fl_Round_Button.H
+	"Fl_Light_Button.H"
+
+1462173223 /usr/local/include/FL/Fl_Check_Button.H
+	"Fl_Light_Button.H"
+
+1462173222 /usr/local/include/FL/Fl_Chart.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/Fl_Choice.H
+	"Fl_Menu_.H"
+
+1462173223 /usr/local/include/FL/Fl_Menu_.H
+	"Fl_Widget.H"
+	"Fl_Menu_Item.H"
+
+1462173223 /usr/local/include/FL/Fl_Menu_Item.H
+	"Fl_Widget.H"
+	"Fl_Image.H"
+
+1462173223 /usr/local/include/FL/Fl_Clock.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/Fl_Counter.H
+	"Fl_Valuator.H"
+
+1462173223 /usr/local/include/FL/Fl_Dial.H
+	"Fl_Valuator.H"
+
+1462173223 /usr/local/include/FL/Fl_Free.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/fl_ask.H
+	"Enumerations.H"
+
+1462173223 /usr/local/include/FL/fl_show_colormap.H
+
+1462173223 /usr/local/include/FL/filename.H
+	"/usr/include/dirent.h"
+	"Fl_Export.H"
+	<FL/filename.H>
+	<sys/types.h>
+	<direct.h>
+	<sys/types.h>
+	<dirent.h>
+
+1460387993 /usr/include/dirent.h
+	<features.h>
+	<bits/types.h>
+	<bits/dirent.h>
+	<bits/types.h>
+	<bits/posix1_lim.h>
+	<stddef.h>
+
+1462173223 /usr/local/include/FL/Fl_File_Chooser.H
+	<FL/Fl.H>
+	<FL/Fl_Double_Window.H>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<FL/Fl_Group.H>
+	<FL/Fl_Choice.H>
+	<FL/Fl_Menu_Button.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Preferences.H>
+	<FL/Fl_Tile.H>
+	<FL/Fl_File_Browser.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Check_Button.H>
+	<FL/Fl_File_Input.H>
+	<FL/Fl_Return_Button.H>
+	<FL/fl_ask.H>
+
+1462173223 /usr/local/include/FL/Fl_Double_Window.H
+	"Fl_Window.H"
+
+1462173223 /usr/local/include/FL/Fl_Menu_Button.H
+	"Fl_Menu_.H"
+
+1462173223 /usr/local/include/FL/Fl_Tile.H
+	"Fl_Group.H"
+
+1462173223 /usr/local/include/FL/Fl_File_Browser.H
+	"Fl_Browser.H"
+	"Fl_File_Icon.H"
+	"filename.H"
+
+1462173223 /usr/local/include/FL/Fl_File_Icon.H
+	"Fl.H"
+
+1462173223 /usr/local/include/FL/Fl_File_Input.H
+	<FL/Fl_Input.H>
+
+1462173223 /usr/local/include/FL/Fl_Input.H
+	"Fl_Input_.H"
+
+1462173223 /usr/local/include/FL/Fl_Input_.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/Fl_Return_Button.H
+	"Fl_Button.H"
+
+1462173223 /usr/local/include/FL/Fl_Positioner.H
+	"Fl_Widget.H"
+
+1462173223 /usr/local/include/FL/Fl_Value_Slider.H
+	"Fl_Slider.H"
+
+1462173223 /usr/local/include/FL/Fl_Timer.H
+	"Fl_Widget.H"
+
+1453247459 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/Fl_TimerSimple.H
+	"Fl_Widget.H"
+
+1460362142 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/main.cpp
+	<getopt.h>
+	"MainWindow.h"
+	<windows.h>
+	<stdio.h>
+
+1460369271 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/MainWindow.h
+	<stdio.h>
+	<sys/time.h>
+	<time.h>
+	<FL/Fl.H>
+	<FL/Fl_Tabs.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Group.H>
+	<FL/Fl_Pack.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Radio_Round_Button.H>
+	<FL/Fl_File_Input.H>
+	<FL/Fl_Double_Window.H>
+	<FL/filename.H>
+	<FL/Fl_Preferences.H>
+	"Fl_TimerSimple.H"
+	"SerialWin.h"
+	"Serial.h"
+	"Plots.h"
+	"WinMouseMonitor.h"
+
+1462173223 /usr/local/include/FL/Fl_Tabs.H
+	"Fl_Group.H"
+
+1462173223 /usr/local/include/FL/Fl_Pack.H
+	<FL/Fl_Group.H>
+
+1462173223 /usr/local/include/FL/Fl_Radio_Round_Button.H
+	"Fl_Round_Button.H"
+
+1456120583 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/SerialWin.h
+	<stdio.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+	"rs232.h"
+
+1450525942 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<sys/file.h>
+	<windows.h>
+
+1453275836 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/Serial.h
+	<stdio.h>
+	<unistd.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+
+1453260442 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/Plots.h
+	<FL/Fl_Group.H>
+	<FL/Fl_Chart.H>
+	<stdio.h>
+
+1460362473 /home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/WinMouseMonitor.h
+	<windows.h>
+	<stdio.h>
+
+1460441880 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/MainWindow.cpp
+	"MainWindow.h"
+
+1453260442 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/Plots.cpp
+	"Plots.h"
+
+1453180794 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/rs232.c
+	"rs232.h"
+
+1456120380 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/SerialWin.cpp
+	"SerialWin.h"
+
+1460363187 source:/home/vincent/Postdoc/Melbourne/ShoulderTracking/ShoulderTrackingIMUs/ShoulderTrackingLog/src/WinMouseMonitor.cpp
+	"WinMouseMonitor.h"
+
+1453248077 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\forms_timer.cxx
+	<FL/Fl.H>
+	<FL/fl_draw.H>
+	<FL/forms.H>
+	"Fl_TimerSimple.H"
+	<time.h>
+	<sys/types.h>
+	<sys/timeb.h>
+	<time.h>
+	<sys/time.h>
+	<stdio.h>
+
+1453247459 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\fl_timersimple.h
+	"Fl_Widget.H"
+
+1596524253 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\main.cpp
+	<getopt.h>
+	"MainWindow.h"
+	<windows.h>
+	<stdio.h>
+
+1596524225 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\mainwindow.h
+	<stdio.h>
+	<sys/time.h>
+	<time.h>
+	<FL/Fl.H>
+	<FL/Fl_Tabs.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Group.H>
+	<FL/Fl_Pack.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Radio_Round_Button.H>
+	<FL/Fl_File_Input.H>
+	<FL/Fl_Double_Window.H>
+	<FL/filename.H>
+	<FL/Fl_Preferences.H>
+	"Fl_TimerSimple.H"
+	"SerialWin.h"
+	"Serial.h"
+	"Plots.h"
+	"WinMouseMonitor.h"
+
+1596524236 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\serialwin.h
+	<stdio.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+	"rs232.h"
+
+1450525942 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<sys/file.h>
+	<windows.h>
+
+1596523029 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\serial.h
+	<stdio.h>
+	<unistd.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+
+1453260442 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\plots.h
+	<FL/Fl_Group.H>
+	<FL/Fl_Chart.H>
+	<stdio.h>
+
+1596538367 c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\winmousemonitor.h
+	<windows.h>
+	<stdio.h>
+
+1453260442 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\plots.cpp
+	"Plots.h"
+
+1453180794 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\rs232.c
+	"rs232.h"
+
+1596524242 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\serialwin.cpp
+	"SerialWin.h"
+
+1594783130 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\winmousemonitor.cpp
+	"WinMouseMonitor.h"
+
+1551602423 c:\fltk-1.3.5\fl\fl.h
+	<FL/Fl_Export.H>
+	<FL/Fl_Cairo.H>
+	"fl_utf8.h"
+	"Enumerations.H"
+	<stdio.h>
+	<FL/Fl.H>
+	<FL/Fl_Window.H>
+
+1551602423 c:\fltk-1.3.5\fl\fl_export.h
+
+1551602423 c:\fltk-1.3.5\fl\fl_cairo.h
+	<FL/Fl_Export.H>
+	<cairo.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_utf8.h
+	"Fl_Export.H"
+	"fl_types.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<locale.h>
+	<ctype.h>
+	<wchar.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<X11/Xlocale.h>
+	<X11/Xlib.h>
+	<locale.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_types.h
+
+1551602423 c:\fltk-1.3.5\fl\enumerations.h
+	<FL/abi-version.h>
+	"Fl_Export.H"
+	"fl_types.h"
+
+1591381279 c:\fltk-1.3.5\fl\abi-version.h
+
+1551602423 c:\fltk-1.3.5\fl\fl_window.h
+	<windows.h>
+	"Fl_Group.H"
+	"Fl_Bitmap.H"
+	<stdlib.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_group.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_widget.h
+	"Enumerations.H"
+	<stdint.h>
+	<stddef.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_bitmap.h
+	"Fl_Image.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_image.h
+	"Enumerations.H"
+	<stdlib.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_draw.h
+	<FL/x.H>
+	<FL/Enumerations.H>
+	<FL/Fl_Window.H>
+	<FL/Fl_Device.H>
+
+1551602423 c:\fltk-1.3.5\fl\x.h
+	"Enumerations.H"
+	"win32.H"
+	"mac.H"
+	<X11/Xlib.h>
+	<X11/Xutil.h>
+	<X11/Xatom.h>
+	"Fl_Window.H"
+
+1551602423 c:\fltk-1.3.5\fl\win32.h
+	<windows.h>
+	<FL/Fl_Window.H>
+
+1551602423 c:\fltk-1.3.5\fl\mac.h
+	<FL/Fl_Widget.H>
+	<ApplicationServices/ApplicationServices.h>
+	"Fl_Window.H"
+	"../src/Fl_Font.H"
+
+1551602423 c:\fltk-1.3.5\src\fl_font.h
+	<config.h>
+	"Xutf8.h"
+
+1591381278 c:\fltk-1.3.5\config.h
+	<mac_endianness.h>
+
+1551602423 c:\fltk-1.3.5\mac_endianness.h
+
+1551602423 c:\fltk-1.3.5\src\xutf8.h
+	<X11/X.h>
+	<X11/Xlib.h>
+	<X11/Xlocale.h>
+	<X11/Xutil.h>
+	<FL/Fl_Export.H>
+
+1551602423 c:\fltk-1.3.5\fl\fl_device.h
+	<FL/x.H>
+	<FL/Fl_Plugin.H>
+	<FL/Fl_Image.H>
+	<FL/Fl_Bitmap.H>
+	<FL/Fl_Pixmap.H>
+	<FL/Fl_RGB_Image.H>
+	<stdlib.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_plugin.h
+	"Fl_Preferences.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_preferences.h
+	<stdio.h>
+	"Fl_Export.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_pixmap.h
+	"Fl_Image.H"
+	"x.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_rgb_image.h
+	"Fl_Image.H"
+
+1551602423 c:\fltk-1.3.5\fl\forms.h
+	"Fl.H"
+	"Fl_Group.H"
+	"Fl_Window.H"
+	"fl_draw.H"
+	"Fl_FormsBitmap.H"
+	"Fl_FormsPixmap.H"
+	"Fl_Box.H"
+	"Fl_Browser.H"
+	"Fl_Button.H"
+	"Fl_Light_Button.H"
+	"Fl_Round_Button.H"
+	"Fl_Check_Button.H"
+	"Fl_Chart.H"
+	"Fl_Choice.H"
+	"Fl_Clock.H"
+	"Fl_Counter.H"
+	"Fl_Dial.H"
+	"Fl_Free.H"
+	"fl_ask.H"
+	"fl_show_colormap.H"
+	"filename.H"
+	"Fl_File_Chooser.H"
+	"Fl_Input.H"
+	"Fl_Menu_Button.H"
+	"Fl_Positioner.H"
+	"Fl_Slider.H"
+	"Fl_Value_Slider.H"
+	"Fl_Timer.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_formsbitmap.h
+	"Fl_Bitmap.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_formspixmap.h
+	"Fl_Pixmap.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_box.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_browser.h
+	"Fl_Browser_.H"
+	"Fl_Image.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_browser_.h
+	"Fl_Group.H"
+	"Fl_Scrollbar.H"
+	<FL/Fl.H>
+
+1551602423 c:\fltk-1.3.5\fl\fl_scrollbar.h
+	"Fl_Slider.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_slider.h
+	"Fl_Valuator.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_valuator.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_button.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_light_button.h
+	"Fl_Button.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_round_button.h
+	"Fl_Light_Button.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_check_button.h
+	"Fl_Light_Button.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_chart.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_choice.h
+	"Fl_Menu_.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_menu_.h
+	"Fl_Widget.H"
+	"Fl_Menu_Item.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_menu_item.h
+	"Fl_Widget.H"
+	"Fl_Image.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_clock.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_counter.h
+	"Fl_Valuator.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_dial.h
+	"Fl_Valuator.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_free.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_ask.h
+	"Enumerations.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_show_colormap.h
+
+1551602423 c:\fltk-1.3.5\fl\filename.h
+	"/usr/include/dirent.h"
+	"Fl_Export.H"
+	<FL/filename.H>
+	<sys/types.h>
+	<direct.h>
+	<sys/types.h>
+	<dirent.h>
+
+1551602423 c:\fltk-1.3.5\fl\fl_file_chooser.h
+	<FL/Fl.H>
+	<FL/Fl_Double_Window.H>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<FL/Fl_Group.H>
+	<FL/Fl_Choice.H>
+	<FL/Fl_Menu_Button.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Preferences.H>
+	<FL/Fl_Tile.H>
+	<FL/Fl_File_Browser.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Check_Button.H>
+	<FL/Fl_File_Input.H>
+	<FL/Fl_Return_Button.H>
+	<FL/fl_ask.H>
+
+1551602423 c:\fltk-1.3.5\fl\fl_double_window.h
+	"Fl_Window.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_menu_button.h
+	"Fl_Menu_.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_tile.h
+	"Fl_Group.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_file_browser.h
+	"Fl_Browser.H"
+	"Fl_File_Icon.H"
+	"filename.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_file_icon.h
+	"Fl.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_file_input.h
+	<FL/Fl_Input.H>
+
+1551602423 c:\fltk-1.3.5\fl\fl_input.h
+	"Fl_Input_.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_input_.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_return_button.h
+	"Fl_Button.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_positioner.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_value_slider.h
+	"Fl_Slider.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_timer.h
+	"Fl_Widget.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_tabs.h
+	"Fl_Group.H"
+
+1551602423 c:\fltk-1.3.5\fl\fl_pack.h
+	<FL/Fl_Group.H>
+
+1551602423 c:\fltk-1.3.5\fl\fl_radio_round_button.h
+	"Fl_Round_Button.H"
+
+1596538344 source:c:\vincent\postdoc\melbourne\shouldertracking\shouldertrackingimus\shouldertrackinglog\src\mainwindow.cpp
+	"MainWindow.h"
+
+1453248077 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\forms_timer.cxx
+	<FL/Fl.H>
+	<FL/fl_draw.H>
+	<FL/forms.H>
+	"Fl_TimerSimple.H"
+	<time.h>
+	<sys/types.h>
+	<sys/timeb.h>
+	<time.h>
+	<sys/time.h>
+	<stdio.h>
+
+1453247459 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\fl_timersimple.h
+	"Fl_Widget.H"
+
+1596524253 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\main.cpp
+	<getopt.h>
+	"MainWindow.h"
+	<windows.h>
+	<stdio.h>
+
+1596524225 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\mainwindow.h
+	<stdio.h>
+	<sys/time.h>
+	<time.h>
+	<FL/Fl.H>
+	<FL/Fl_Tabs.H>
+	<FL/Fl_Box.H>
+	<FL/Fl_Group.H>
+	<FL/Fl_Pack.H>
+	<FL/Fl_Button.H>
+	<FL/Fl_Radio_Round_Button.H>
+	<FL/Fl_File_Input.H>
+	<FL/Fl_Double_Window.H>
+	<FL/filename.H>
+	<FL/Fl_Preferences.H>
+	"Fl_TimerSimple.H"
+	"SerialWin.h"
+	"Serial.h"
+	"Plots.h"
+	"WinMouseMonitor.h"
+
+1596524236 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serialwin.h
+	<stdio.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+	"rs232.h"
+
+1450525942 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<sys/file.h>
+	<windows.h>
+
+1596523029 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serial.h
+	<stdio.h>
+	<unistd.h>
+	<math.h>
+	<FL/Fl.H>
+	<FL/fl_ask.H>
+
+1453260442 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\plots.h
+	<FL/Fl_Group.H>
+	<FL/Fl_Chart.H>
+	<stdio.h>
+
+1596538367 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\winmousemonitor.h
+	<windows.h>
+	<stdio.h>
+
+1596538344 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\mainwindow.cpp
+	"MainWindow.h"
+
+1453260442 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\plots.cpp
+	"Plots.h"
+
+1453180794 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\rs232.c
+	"rs232.h"
+
+1596587124 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serialwin.cpp
+	"SerialWin.h"
+
+1594783130 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\winmousemonitor.cpp
+	"WinMouseMonitor.h"
+

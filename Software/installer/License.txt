@@ -1,0 +1,5 @@
+
+	ShoulderTrackingIMU
+
+	Copyright (C) 2015-2016 Vincent Crocher
+	The University of Melbourne

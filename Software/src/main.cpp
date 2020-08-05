@@ -10,7 +10,6 @@
 #include <getopt.h>
 #include "MainWindow.h"
 
-
 #define _WIN32_WINNT 0x0400
 #pragma comment( lib, "user32.lib" )
 

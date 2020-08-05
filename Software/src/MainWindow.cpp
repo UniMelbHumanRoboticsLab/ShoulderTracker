@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 //
-//    Copyright (C) 2015-2016, 2020 Vincent Crocher
+//    Copyright (C) 2015-2016, 2020 Vincent Crocher, Chenchen Liao
 //    The University of Melbourne
 //
 //	  This file is part of ShoulderTrackingIMU.
@@ -49,9 +49,9 @@ void UpdateValues_cb(void * param)
             }
             mw->State=state;
             if(state=='R' || state=='T')
-                sprintf(status, "%sRUNNING\0", status);
+                sprintf(status, "%sRUNNING", status);
             else
-                sprintf(status, "%sPAUSE\0", status);
+                sprintf(status, "%sPAUSE", status);
             mw->StatusBar->copy_label(status);
             mw->StatusBar->redraw();
         }
@@ -74,6 +74,18 @@ void UpdateValues_cb(void * param)
         if(mw->Play)
         {
             fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_ms, device_time, vals[0], vals[1], vals[2], vals[3], MousePosition[0], MousePosition[1]);
+            //Provide audio feedback if required
+            if(vals[0]>vals[2]||vals[1]>vals[3])
+            {
+                if(mw->Mode=='D')
+                {
+                    PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                }
+                else
+                {
+                    PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                }
+            }
             Fl::repeat_timeout(0.015, UpdateValues_cb, param); //~70Hz
         }
     }

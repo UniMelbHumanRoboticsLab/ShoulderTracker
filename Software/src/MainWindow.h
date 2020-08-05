@@ -29,6 +29,9 @@
 
 #ifdef WINDOWS
     #include "SerialWin.h"
+    #include "windows.h"
+    #include "Mmsystem.h"
+    #pragma comment(lib,"winmm.lib")
 #else
     #include "Serial.h"
 #endif

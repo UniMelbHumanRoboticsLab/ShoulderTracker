@@ -32,7 +32,7 @@
 				<Option output="bin/Win32/ShoulderTrackingIMU.exe" prefix_auto="0" extension_auto="0" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="-m d" />
+				<Option parameters="-m s -p" />
 				<Option projectLinkerOptionsRelation="1" />
 				<Compiler>
 					<Add option="-static-libgcc" />
@@ -50,6 +50,7 @@
 					<Add library="fltk_z" />
 					<Add library="fltk_png" />
 					<Add library="fltk_jpeg" />
+					<Add library="winmm" />
 					<Add directory="C:/fltk-1.3.5/lib" />
 				</Linker>
 			</Target>
@@ -75,6 +76,7 @@
 					<Add library="fltk_z" />
 					<Add library="fltk_png" />
 					<Add library="fltk_jpeg" />
+					<Add library="winmm" />
 					<Add directory="C:/fltk-1.3.5/lib" />
 				</Linker>
 			</Target>

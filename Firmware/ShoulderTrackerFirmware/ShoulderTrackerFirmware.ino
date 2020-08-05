@@ -29,9 +29,6 @@
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
 
-#define BuzzPin 6
-#define BeepPin 11
-#define ModePin 12
 
 unsigned long int t, Dt;
 
@@ -60,7 +57,7 @@ bool Testing;
 //                              ACTION FUNCTIONS 
 //###################################################################################
 
-//PWM on pin6, intensity from 0 to 1
+//PWM intensity from 0 to 1
 void Vibrate(float intensity)
 {
   if(intensity>1)
@@ -373,8 +370,6 @@ void InitDynamic()
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
-
-
 
 
 

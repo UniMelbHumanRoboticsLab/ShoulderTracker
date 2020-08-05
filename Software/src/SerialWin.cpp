@@ -198,6 +198,7 @@ bool Serial::CheckDevice()
             {
                 //Flush buffer
                 RS232_flushRX(PortCom);
+                printf("reply: -%s-\n", reply);
 
                 //Check reply
                 if(strcmp((char*)reply, "OKST")==0)

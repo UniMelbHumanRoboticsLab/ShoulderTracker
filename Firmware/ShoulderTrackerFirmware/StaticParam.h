@@ -10,6 +10,10 @@
 #include <L3G.h>
 #define GYRO_2_DPS 1/32768. //Gyroscope conversion rate to degree per seconds
 #define ACC_2_MS2 1/16276. //Acceleration convertion to m.s-2
+
+#define BuzzPin 6
+#define BeepPin 11
+#define ModePin 12
 #endif
 
 //For use with AltIMU-10 v5: https://www.pololu.com/product/2739
@@ -21,6 +25,10 @@
 //Extreme magnetometer values to calibrate
 LIS3MDL::vector<int16_t> m_min = { -4395,  -3894,  -4690};
 LIS3MDL::vector<int16_t> m_max = { +3276,  +3562,  +3024};
+
+#define BuzzPin 5
+#define BeepPin 11
+#define ModePin 12
 #endif
 
 

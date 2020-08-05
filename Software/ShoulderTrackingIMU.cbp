@@ -32,7 +32,7 @@
 				<Option output="bin/Win32/ShoulderTrackingIMU.exe" prefix_auto="0" extension_auto="0" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="-m s -p" />
+				<Option parameters="-m d" />
 				<Option projectLinkerOptionsRelation="1" />
 				<Compiler>
 					<Add option="-static-libgcc" />

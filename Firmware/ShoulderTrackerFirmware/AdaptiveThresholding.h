@@ -10,7 +10,7 @@
 #include <serstream.h>
 
 //#define DEBUG
-//#define MEMORY_DEBUG
+#define MEMORY_DEBUG
 
 #ifdef MEMORY_DEBUG
   typedef struct __freelist {
@@ -61,7 +61,7 @@
 unsigned char uchar_min(unsigned char a, unsigned char b){return (a<=b ? a:b);}
 unsigned char uchar_max(unsigned char a, unsigned char b){return (a>=b ? a:b);}
 
-#define NB_PTS 150 // (300 => 5min, 150 =>2min30s)
+#define NB_PTS 150 // (300 => 5min, 150 =>2min30s) WARNING: check memory capacity
 
 
 //###################################################################################
@@ -72,14 +72,15 @@ class AdaptiveThresholding
 {
 
   public:
-    std::vector<unsigned char> Ordered;
+    typedef unsigned int ValuesType; //Types of values stored by the class (will afect precision together with scale factor)
+    std::vector<ValuesType> Ordered;
     std::vector<unsigned char> OrderedOrder;
     unsigned long int StorageT;
     
     float ScalingFactor;
     
     unsigned int tmpNbVal;
-    float tmpAvg;
+    double tmpAvg;
 
     //Constructor: reserve vectors memory and init values
     AdaptiveThresholding()
@@ -144,14 +145,15 @@ class AdaptiveThresholding
          tmpMax=uchar_max(tmpMax, V*ScalingFactor);
          //Get min
          tmpMin=uchar_min(tmpMin, V*ScalingFactor);*/
-         //Avg: TODO: keep it in float until storage
-         tmpAvg+=V*ScalingFactor;
+         //Avg: keep it in float until storage
+         tmpAvg+=V;
       }
       //When current second is over: store and reset
       else
       {
          //Compute average
-         tmpAvg/=(float)tmpNbVal;
+         tmpAvg/=(double)tmpNbVal;
+         tmpAvg*=ScalingFactor;
         
          //Store in memory
          #ifdef MEMORY_DEBUG
@@ -159,13 +161,11 @@ class AdaptiveThresholding
          #endif
          /*Debug
          Serial.print(millis());Serial.print("ms, ");Serial.print(tmpNbVal);Serial.print("sp, ");Serial.println(tmpAvg);*/
-         Insert((unsigned char) tmpAvg);
+         Insert((ValuesType) tmpAvg);
          
          //Reset orig time
          StorageT=millis();
          //Reset tmp values
-         /*tmpMax=0;
-         tmpMin=256;*/
          tmpAvg=0;
          tmpNbVal=0;
       }
@@ -173,7 +173,7 @@ class AdaptiveThresholding
     
     
     //Insert element in the ordered vector
-    void Insert(unsigned char newVal)
+    void Insert(ValuesType newVal)
     {
       #ifdef DEBUG
         Serial.print("Add");
@@ -240,7 +240,7 @@ class AdaptiveThresholding
       #endif
   
       //insert element at the position just found
-      std::vector<unsigned char>::iterator it;
+      std::vector<ValuesType>::iterator it;
       it = Ordered.begin();
       it+=pos;
       Ordered.insert(it, newVal);

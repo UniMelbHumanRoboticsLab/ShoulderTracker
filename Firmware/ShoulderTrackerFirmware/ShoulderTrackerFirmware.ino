@@ -358,11 +358,11 @@ void InitDynamic()
 	gyro.enableDefault();
 
 	//Reinit adaptive threshold
-	AdaptThresh[0].Reset(5000);
-	AdaptThresh[1].Reset(200);
+	AdaptThresh[0].Reset(100);
+	AdaptThresh[1].Reset(100);
 
 	//Reset minimal threshold values
-	MinimalThresh[0]=0.01;
+	MinimalThresh[0]=0.02;
 	MinimalThresh[1]=0.020;
 	BipBip();
 }

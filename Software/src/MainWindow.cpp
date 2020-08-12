@@ -19,10 +19,11 @@ void UpdateValues_cb(void * param)
     //Get values
     char mode, state;
     float device_time;
-    float vals[4];
+    float vals[4], thresholds[2];
     double t_ms;
     struct timeval t1;
-    if(mw->SerialCom->Read(&mode, &state, &device_time, vals)>=0)
+    //if(mw->SerialCom->Read(&mode, &state, &device_time, vals, thresholds)>=0)
+    if(mw->SerialCom->ReadBinary(&mode, &device_time, vals, thresholds)>=0)
     {
         //Get time to log it
         gettimeofday(&t1, NULL);
@@ -73,15 +74,18 @@ void UpdateValues_cb(void * param)
         //Log
         if(mw->Play)
         {
-            fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_ms, device_time, vals[0], vals[1], vals[2], vals[3], MousePosition[0], MousePosition[1]);
+            fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_ms, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
             //Provide audio feedback if required
-            if(vals[0]>vals[2]||vals[1]>vals[3])
+            if(mw->Mode=='D')
             {
-                if(mw->Mode=='D')
+                if(vals[2]>thresholds[0]||vals[3]>thresholds[1])
                 {
                     PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }
-                else
+            }
+            else
+            {
+                if(vals[0]>thresholds[0]||vals[1]>thresholds[1])
                 {
                     PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }

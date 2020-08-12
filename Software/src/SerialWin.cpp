@@ -11,6 +11,18 @@
 
 
 
+unsigned int Int16toInt(unsigned char LSB, unsigned char HSB)
+{
+    return LSB + HSB*256;
+}
+
+unsigned int Int32toInt(unsigned char LLSB, unsigned char LSB, unsigned char HSB, unsigned char HHSB)
+{
+    return  (((HHSB*256) + HSB)*256 + LSB)*256 + LLSB;
+}
+
+
+
 Serial::Serial(bool quiet)
 {
     //Try any COM port...
@@ -111,11 +123,11 @@ int Serial::SendChars(const char *c, int nb_vals)
 
 
 //!Read a data frame from the device
-int Serial::Read(char *mode, char *state, float *device_time, float *vals)
+int Serial::Read(char *mode, char *state, float *device_time, float *vals, float *thresh)
 {
     if(Connected)
     {
-        int nb_bytes_expected=1+1+6+1+6+1+6+1+6+1+6+2;//Each float is 6 bytes from Arduino and ending by CRLF.
+        int nb_bytes_expected=1+1+6+1+6+1+6+1+6+1+6+1+6+1+6+2;//Each float is 6 bytes from Arduino and ending by CRLF.
         unsigned char *buffer=new unsigned char[nb_bytes_expected];
 
         //Get first char of the sequence
@@ -137,7 +149,7 @@ int Serial::Read(char *mode, char *state, float *device_time, float *vals)
         {
             //printf("--%s--\n\n", buffer);
             //Parse received bytes
-            if(sscanf((char *)buffer, "%c%f,%f,%f,%f,%f", state, device_time, &vals[0], &vals[1], &vals[2], &vals[3])!=6)
+            if(sscanf((char *)buffer, "%c%f,%f,%f,%f,%f,%f,%f", state, device_time, &vals[0], &vals[1], &vals[2], &vals[3], &thresh[0], &thresh[1])!=8)
             {
                 //RS232_flushRX(PortCom);
                 delete[] buffer;
@@ -166,7 +178,7 @@ int Serial::Read(char *mode, char *state, float *device_time, float *vals)
         if(Connect(true))
         {
             //Read again if finally connected
-            return Read(mode, state, device_time, vals);
+            return Read(mode, state, device_time, vals, thresh);
         }
         else
         {
@@ -175,6 +187,81 @@ int Serial::Read(char *mode, char *state, float *device_time, float *vals)
         }
     }
 }
+
+//!Read binary formatted data frame from the device
+int Serial::ReadBinary(char *mode, float *device_time, float *vals, float *thresh)
+{
+    if(Connected)
+    {
+        int nb_bytes_expected=1+4+1+1+1+1+2+2+2;//Ending by CRLF.
+        unsigned char *buffer=new unsigned char[nb_bytes_expected];
+
+        //Get first char of the sequence
+        unsigned char startbyte=0;
+        int i=0;
+        while( startbyte!='D' && startbyte!='S' && i<2*nb_bytes_expected)
+        {
+            i++;
+            RS232_PollComport(PortCom, &startbyte, 1);
+            Sleep(1); //1ms
+        }
+        if(i>=2*nb_bytes_expected)
+            return -4;
+
+        *mode=startbyte;
+
+        //Get full sequence (minus start byte)
+        if(RS232_PollComport(PortCom, buffer, nb_bytes_expected-1)==nb_bytes_expected-1)
+        {
+            //Time in s
+            (*device_time) = (float) (Int32toInt(buffer[1], buffer[2], buffer[3], buffer[4]) /1000.); //LSB first
+            //First angle deg
+            vals[0] = buffer[5];
+            //Second angle deg
+            vals[1] = buffer[6];
+            //First velocity
+            vals[2] = (float)(buffer[7]/1000.);
+            //Secondvelocity
+            vals[3] = (float)(buffer[8]/1000.);
+            //First threshold
+            thresh[0] = (float)(Int16toInt(buffer[9], buffer[10])/100.);
+            //Second threshold
+            thresh[1] = (float)(Int16toInt(buffer[11], buffer[12])/100.);
+
+            //CHECKSUM???
+            //return -2;
+
+            //Flush buffer
+            RS232_flushRX(PortCom);
+
+            //Check that values looks correct
+            if( (*mode=='D' || *mode=='S') )
+                return 0;
+            else
+                return -3;
+        }
+        else //Wrong nb of bytes received
+        {
+            delete[] buffer;
+            return -2;
+        }
+    }
+    else //Not connected
+    {
+        //Try to connect...
+        if(Connect(true))
+        {
+            //Read again if finally connected
+            return ReadBinary(mode, device_time, vals, thresh);
+        }
+        else
+        {
+            //error otherwise
+            return -1;
+        }
+    }
+}
+
 
 
 

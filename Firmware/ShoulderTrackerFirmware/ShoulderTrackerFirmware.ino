@@ -28,6 +28,7 @@
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
+#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;
@@ -374,6 +375,37 @@ void InitDynamic()
 
 
 
+
+//###################################################################################
+//                                PRINTING FUNCTIONS 
+//###################################################################################
+void PrintInt8(int val)
+{
+  char val8 = (abs(val)>256)?256:abs(val);
+  Serial.write(val8);
+}
+
+void PrintInt16(int val)
+{
+  unsigned short int val16 = (abs(val)>65535)?65535:abs(val);
+  Serial.write(lowByte(val16));
+  Serial.write(highByte(val16));
+}
+
+void PrintInt32(int val)
+{
+  unsigned short int val32 = (abs(val)>65535*65535)?65535*65535:abs(val);
+  int tmp = val32 && 0xFFFF; //lower 16 bits
+  PrintInt16(tmp);
+  tmp = val32 >> 16; //higher 16 bits
+  PrintInt16(tmp);
+}
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+
+
+
 void setup()
 {
 	//IMU init
@@ -394,13 +426,13 @@ void setup()
 	pinMode(BeepPin, OUTPUT);
 	//Input pin
 	pinMode(ModePin, INPUT_PULLUP);
+
+
+  //Init both modes at startup
+  //Mode=STATIC;Init();
+	//And keep Dynamic mode as default
+	Mode=DYNAMIC;Init();
 	
-	//Default is Dynamic mode on startup
-	Mode=DYNAMIC;
-
-	//Inits
-	Init();
-
 	//And serial if needed
 	#if defined(LOG) || defined(DEBUG) || defined(MEMORY_DEBUG)
 	Serial.begin(19200);
@@ -425,19 +457,24 @@ void loop()
 	float current_val[2]={0,0};
 	char header_letters[2]={'0','0'};
 	char logBeep='0', ErrorFlag='0';
+
+  //Retrieve values from sensors
+  int CoronalPlaneAngle=(int)(abs(GetAngleAcc(&Static)));
+  int TransversePlaneAngle=(int)(abs(GetAngleMag(&Static)));
+  float LinearVelocity=GetVel(&Dynamic);
+  float AngularVelocity=sqrt(gyro.g.x*GYRO_2_DPS*gyro.g.x*GYRO_2_DPS+gyro.g.y*GYRO_2_DPS*gyro.g.y*GYRO_2_DPS+gyro.g.z*GYRO_2_DPS*gyro.g.z*GYRO_2_DPS);
+  
 	switch(Mode)
 	{
 		case STATIC:
 			//Get the two angles
-			current_val[0]=(int)(abs(GetAngleAcc(&Static)));
-			current_val[1]=(int)(abs(GetAngleMag(&Static)));
+			current_val[0]=CoronalPlaneAngle;
+			current_val[1]=TransversePlaneAngle;
 			header_letters[0]='S';
 			break;
 		case DYNAMIC:
-			//Get linear velocity
-			current_val[0]=GetVel(&Dynamic);
-			//Get angular velocity from gyros: second value
-			current_val[1]=sqrt(gyro.g.x*GYRO_2_DPS*gyro.g.x*GYRO_2_DPS+gyro.g.y*GYRO_2_DPS*gyro.g.y*GYRO_2_DPS+gyro.g.z*GYRO_2_DPS*gyro.g.z*GYRO_2_DPS);
+			current_val[0]=LinearVelocity;
+			current_val[1]=AngularVelocity;
 			header_letters[0]='D';
 			break;
 	}
@@ -456,13 +493,7 @@ void loop()
 	
 		//Apply feedback if needed
 		float diff[2], thresh[2];
-		#ifdef DEBUG
-			Serial.print("0:   ");
-		#endif
 		thresh[0]=fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]);
-		#ifdef DEBUG
-			Serial.print("1:   ");
-		#endif
 		thresh[1]=fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]);
 		diff[0]=(current_val[0]-thresh[0])/thresh[0];
 		diff[1]=(current_val[1]-thresh[1])/thresh[1];
@@ -496,17 +527,33 @@ void loop()
 	#ifdef LOG
 	if(!Pause)
 	{
+    
 		Serial.print(header_letters[0]);
-		Serial.print(header_letters[1]);
-		Serial.print((float)(millis()/1000.), 3);
+    #ifdef BINARY_LOG
+    PrintInt32((int)(millis()));
+    PrintInt8(CoronalPlaneAngle);
+    PrintInt8(TransversePlaneAngle);
+    PrintInt8((int)(LinearVelocity*1000));
+    PrintInt8((int)(AngularVelocity*1000));
+    PrintInt16((int)(AdaptThresh[0].GetThreshold(Sensitivity)*100));
+    PrintInt16((int)(AdaptThresh[1].GetThreshold(Sensitivity)*100));
+    Serial.println("");
+    #else
+    Serial.print(header_letters[1]);
+    Serial.print((float)(millis()/1000.), 3);
 		Serial.print(',');
-		Serial.print(fmax(current_val[0],0.00001), 4);
+		Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
 		Serial.print(',');
-		Serial.print(fmax(current_val[1],0.00001), 4);
+		Serial.print(fmax(TransversePlaneAngle,0.00001), 0);
 		Serial.print(',');
-		Serial.print(fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]), 4);
+    Serial.print(fmax(LinearVelocity,0.00001), 3);
+    Serial.print(',');
+    Serial.print(fmax(AngularVelocity,0.00001), 3);
+    Serial.print(',');
+		Serial.print(fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]), 3);
 		Serial.print(',');
-		Serial.println(fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]), 4);
+		Serial.println(fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]), 3);
+    #endif
 	}
 
 	//Check for serial message: run/pause

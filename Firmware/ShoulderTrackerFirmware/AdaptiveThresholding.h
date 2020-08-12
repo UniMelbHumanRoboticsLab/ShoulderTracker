@@ -10,7 +10,7 @@
 #include <serstream.h>
 
 //#define DEBUG
-#define MEMORY_DEBUG
+//#define MEMORY_DEBUG
 
 #ifdef MEMORY_DEBUG
   typedef struct __freelist {

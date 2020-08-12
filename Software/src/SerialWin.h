@@ -31,7 +31,8 @@ class Serial
         int SendChar(unsigned char c);
         int SendChars(const char *c, int nb_vals);
 
-        int Read(char *mode, char *state, float *device_time, float *vals);
+        int Read(char *mode, char *state, float *device_time, float *vals, float *thresh);
+        int ReadBinary(char *mode, float *device_time, float *vals, float *thresh);
         bool CheckDevice();
         bool SetState(bool play);
         bool SetTesting();

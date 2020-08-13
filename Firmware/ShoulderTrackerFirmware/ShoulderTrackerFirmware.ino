@@ -29,7 +29,7 @@
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
-//#define BINARY_LOG //Optimised faster (binary) log
+#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;
@@ -442,6 +442,7 @@ void setup()
 	}
 	#endif
 	Pause=true;
+  t=micros();
 }
 
 
@@ -451,8 +452,13 @@ void loop()
 	//Update values from IMU
 	compass.read();
 	gyro.read();
-	Dt=micros()-t;
-	t=micros();
+  //Fixed update rate of 100Hz
+  const unsigned long int period_us=10000;
+  while((micros()-t)<period_us) { //delayMicroseconds doesn't work...
+    ;
+  }
+  Dt=micros()-t;
+  t=micros();
 
 	//Processing and values depend on the mode
 	float current_val[2]={0,0};
@@ -531,29 +537,29 @@ void loop()
     
 		Serial.print(header_letters[0]);
     #ifdef BINARY_LOG
-    PrintInt32((int)(millis()));
-    PrintInt8(CoronalPlaneAngle);
-    PrintInt8(TransversePlaneAngle);
-    PrintInt8((int)(LinearVelocity*1000));
-    PrintInt8((int)(AngularVelocity*1000));
-    PrintInt16((int)(AdaptThresh[0].GetThreshold(Sensitivity)*100));
-    PrintInt16((int)(AdaptThresh[1].GetThreshold(Sensitivity)*100));
-    Serial.println("");
+      PrintInt32((int)(millis()));
+      PrintInt8(CoronalPlaneAngle);
+      PrintInt8(TransversePlaneAngle);
+      PrintInt8((int)(LinearVelocity*1000));
+      PrintInt8((int)(AngularVelocity*1000));
+      PrintInt16((int)(AdaptThresh[0].GetThreshold(Sensitivity)*100));
+      PrintInt16((int)(AdaptThresh[1].GetThreshold(Sensitivity)*100));
+      Serial.println("");
     #else
-    Serial.print(header_letters[1]);
-    Serial.print((float)(millis()/1000.), 3);
-		Serial.print(',');
-		Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
-		Serial.print(',');
-		Serial.print(fmax(TransversePlaneAngle,0.00001), 0);
-		Serial.print(',');
-    Serial.print(fmax(LinearVelocity,0.00001), 3);
-    Serial.print(',');
-    Serial.print(fmax(AngularVelocity,0.00001), 3);
-    Serial.print(',');
-		Serial.print(fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]), 3);
-		Serial.print(',');
-		Serial.println(fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]), 3);
+      Serial.print(header_letters[1]);
+      Serial.print((float)(millis()/1000.), 3);
+  		Serial.print(',');
+  		Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
+  		Serial.print(',');
+  		Serial.print(fmax(TransversePlaneAngle,0.00001), 0);
+  		Serial.print(',');
+      Serial.print(fmax(LinearVelocity,0.00001), 3);
+      Serial.print(',');
+      Serial.print(fmax(AngularVelocity,0.00001), 3);
+      Serial.print(',');
+  		Serial.print(fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]), 3);
+  		Serial.print(',');
+  		Serial.println(fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]), 3);
     #endif
 	}
 

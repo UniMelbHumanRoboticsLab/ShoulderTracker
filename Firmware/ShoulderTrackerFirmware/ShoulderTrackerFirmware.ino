@@ -6,11 +6,12 @@
  * Communication protocol: Serial - 8N1 - 19200bps
  * 	*Reception commands:
  *		-CDQ: Device check query. Response: OKST
- *		-CDP: Pause device (no feedback, no log). Response: OK
- *		-CDR: Run (unpause). Response: OK
- *		-CDT: Test mode (log, no feedback). Response: OK
- *		-CDS: Switch to STATIC mode (feedback and log are angles). Response: OK
- *		-CDD: Switch to DYNAMIC mode (feedback and log are angular and linear velocities). Response: OK.
+ *		-CDP: Pause device (no feedback, no log).
+ *		-CDR: Run (unpause).
+ *		-CDT: Test mode (log, no feedback).
+ *		-CDS: Switch to STATIC mode (feedback and log are angles).
+ *		-CDD: Switch to DYNAMIC mode (feedback and log are angular and linear velocities).
+ *   Response in the form OKxy with x=[S/D] the current/applied mode and y=[R/T/P] the current state.
  *	* Log: when not in pause, device will continously send a trame of the following values:
  * 			[S/D][R/T]time,val1,val2,threshold1,threshold2\n\r
  *		ex:	ST12.32,32.2,6.3,36.1,6.5 in STATIC mode, testing. time is time since initiation in seconds. Angles are in degrees, velocities in deg.s-1 and m.s-1.
@@ -28,7 +29,7 @@
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
-#define BINARY_LOG //Optimised faster (binary) log
+//#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;
@@ -282,6 +283,11 @@ float GetVel(Dynamic_param *d)
 //Select init depending on mode
 void Init()
 {
+  compass.init();
+  compass.enableDefault();
+  gyro.init();
+  gyro.enableDefault();
+  
 	switch(Mode)
 	{
 		case STATIC:
@@ -355,16 +361,13 @@ void InitDynamic()
 
 	Bip();
 
-	gyro.init();
-	gyro.enableDefault();
-
 	//Reinit adaptive threshold
 	AdaptThresh[0].Reset(100);
 	AdaptThresh[1].Reset(100);
 
 	//Reset minimal threshold values
 	MinimalThresh[0]=0.02;
-	MinimalThresh[1]=0.020;
+	MinimalThresh[1]=0.02;
 	BipBip();
 }
 
@@ -410,8 +413,6 @@ void setup()
 {
 	//IMU init
 	Wire.begin();
-	compass.init();
-	compass.enableDefault();
 
 	#ifdef V1_IMU02A
 	compass.m_min = (LSM303::vector<int16_t>){-185,   -689,  -1835};
@@ -427,12 +428,12 @@ void setup()
 	//Input pin
 	pinMode(ModePin, INPUT_PULLUP);
 
-
   //Init both modes at startup
-  //Mode=STATIC;Init();
+  Mode=STATIC;Init();
 	//And keep Dynamic mode as default
 	Mode=DYNAMIC;Init();
-	
+
+
 	//And serial if needed
 	#if defined(LOG) || defined(DEBUG) || defined(MEMORY_DEBUG)
 	Serial.begin(19200);

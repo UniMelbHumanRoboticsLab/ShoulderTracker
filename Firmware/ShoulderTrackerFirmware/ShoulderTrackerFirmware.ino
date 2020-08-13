@@ -384,21 +384,21 @@ void InitDynamic()
 //###################################################################################
 void PrintInt8(int val)
 {
-  char val8 = (abs(val)>256)?256:abs(val);
+  char val8 = (abs(val)>255)?255:abs(val);
   Serial.write(val8);
 }
 
-void PrintInt16(int val)
+void PrintInt16(unsigned int val)
 {
   unsigned short int val16 = (abs(val)>65535)?65535:abs(val);
   Serial.write(lowByte(val16));
   Serial.write(highByte(val16));
 }
 
-void PrintInt32(int val)
+void PrintInt32(unsigned long int val)
 {
-  unsigned short int val32 = (abs(val)>65535*65535)?65535*65535:abs(val);
-  int tmp = val32 && 0xFFFF; //lower 16 bits
+  unsigned long int val32 = (abs(val)>65535*65535)?65535*65535:abs(val);
+  unsigned int tmp = val32 & 0xFFFF; //lower 16 bits
   PrintInt16(tmp);
   tmp = val32 >> 16; //higher 16 bits
   PrintInt16(tmp);
@@ -534,10 +534,10 @@ void loop()
 	#ifdef LOG
 	if(!Pause)
 	{
-    
 		Serial.print(header_letters[0]);
+    Serial.print(header_letters[1]);
     #ifdef BINARY_LOG
-      PrintInt32((int)(millis()));
+      PrintInt32(millis());
       PrintInt8(CoronalPlaneAngle);
       PrintInt8(TransversePlaneAngle);
       PrintInt8((int)(LinearVelocity*1000));
@@ -546,7 +546,6 @@ void loop()
       PrintInt16((int)(AdaptThresh[1].GetThreshold(Sensitivity)*100));
       Serial.println("");
     #else
-      Serial.print(header_letters[1]);
       Serial.print((float)(millis()/1000.), 3);
   		Serial.print(',');
   		Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
@@ -625,6 +624,7 @@ void loop()
 			Serial.println("E1");
 		}
 		//Flush serial buffer
+    Serial.flush();
 		while(Serial.available()>0)
 			Serial.read();
 	}

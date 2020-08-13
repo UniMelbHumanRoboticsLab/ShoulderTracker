@@ -189,12 +189,12 @@ int Serial::Read(char *mode, char *state, float *device_time, float *vals, float
 }
 
 //!Read binary formatted data frame from the device
-int Serial::ReadBinary(char *mode, float *device_time, float *vals, float *thresh)
+int Serial::ReadBinary(char *mode, char *state, float *device_time, float *vals, float *thresh)
 {
     if(Connected)
     {
-        int nb_bytes_expected=1+4+1+1+1+1+2+2+2;//Ending by CRLF.
-        unsigned char *buffer=new unsigned char[nb_bytes_expected];
+        int nb_bytes_expected=1+1+4+1+1+1+1+2+2+2;//Ending by CRLF.
+        unsigned char *buffer=new unsigned char[nb_bytes_expected-1];
 
         //Get first char of the sequence
         unsigned char startbyte=0;
@@ -208,11 +208,16 @@ int Serial::ReadBinary(char *mode, float *device_time, float *vals, float *thres
         if(i>=2*nb_bytes_expected)
             return -4;
 
-        *mode=startbyte;
+        (*mode)=startbyte;
 
         //Get full sequence (minus start byte)
         if(RS232_PollComport(PortCom, buffer, nb_bytes_expected-1)==nb_bytes_expected-1)
         {
+            //State: use as sanity check
+            if(buffer[0]!='R' && buffer[0]!='T' && buffer[0]!='P')
+                return -4;
+            //State
+            (*state)=buffer[0];
             //Time in s
             (*device_time) = (float) (Int32toInt(buffer[1], buffer[2], buffer[3], buffer[4]) /1000.); //LSB first
             //First angle deg
@@ -252,7 +257,7 @@ int Serial::ReadBinary(char *mode, float *device_time, float *vals, float *thres
         if(Connect(true))
         {
             //Read again if finally connected
-            return ReadBinary(mode, device_time, vals, thresh);
+            return ReadBinary(mode, state, device_time, vals, thresh);
         }
         else
         {

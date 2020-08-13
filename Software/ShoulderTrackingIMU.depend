@@ -927,7 +927,7 @@
 	"Plots.h"
 	"WinMouseMonitor.h"
 
-1597220222 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serialwin.h
+1597332862 c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serialwin.h
 	<stdio.h>
 	<math.h>
 	<FL/Fl.H>
@@ -963,7 +963,7 @@
 	<windows.h>
 	<stdio.h>
 
-1597220311 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\mainwindow.cpp
+1597336595 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\mainwindow.cpp
 	"MainWindow.h"
 
 1453260442 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\plots.cpp
@@ -972,7 +972,7 @@
 1453180794 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\rs232.c
 	"rs232.h"
 
-1597224078 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serialwin.cpp
+1597336631 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\serialwin.cpp
 	"SerialWin.h"
 
 1594783130 source:c:\vincent\postdoc\melbourne\fourier\the university of melbourne\justin fong - fourierjointlab\shouldertrackingstudy\tech\software\src\winmousemonitor.cpp

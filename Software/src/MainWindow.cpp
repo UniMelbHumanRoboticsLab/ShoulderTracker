@@ -20,14 +20,14 @@ void UpdateValues_cb(void * param)
     char mode, state;
     float device_time;
     float vals[4], thresholds[2];
-    double t_ms;
+    double t_s;
     struct timeval t1;
     //if(mw->SerialCom->Read(&mode, &state, &device_time, vals, thresholds)>=0)
-    if(mw->SerialCom->ReadBinary(&mode, &device_time, vals, thresholds)>=0)
+    if(mw->SerialCom->ReadBinary(&mode, &state, &device_time, vals, thresholds)>=0)
     {
         //Get time to log it
         gettimeofday(&t1, NULL);
-        t_ms = t1.tv_sec * 1000.0 + t1.tv_usec / 1000.0;
+        t_s = t1.tv_sec + t1.tv_usec / (1000.0*1000.0);
 
         //Reset nb of consecutive missed values
         mw->NbMissedUpdates=0;
@@ -74,7 +74,7 @@ void UpdateValues_cb(void * param)
         //Log
         if(mw->Play)
         {
-            fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_ms, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
+            fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
             //Provide audio feedback if required
             if(mw->Mode=='D')
             {
@@ -90,7 +90,7 @@ void UpdateValues_cb(void * param)
                     PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }
             }
-            Fl::repeat_timeout(0.015, UpdateValues_cb, param); //~70Hz
+            Fl::repeat_timeout(0.005, UpdateValues_cb, param); // Ideally 100Hz
         }
     }
     else
@@ -258,6 +258,7 @@ void Quit_cb(Fl_Widget * widget, void * param)
     //and thus remind user to turn it off
     if(mw->NbMissedUpdates<10 && mw->Play)
     {
+        mw->SerialCom->SetState(false);
         fl_message_title("ShoulderTracker");
         fl_alert("Make sure you turned OFF the device !");
     }

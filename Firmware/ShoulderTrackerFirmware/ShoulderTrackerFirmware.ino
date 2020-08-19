@@ -12,8 +12,8 @@
  *		-CDS: Switch to STATIC mode (feedback and log are angles).
  *		-CDD: Switch to DYNAMIC mode (feedback and log are angular and linear velocities).
  *   Response in the form OKxy with x=[S/D] the current/applied mode and y=[R/T/P] the current state.
- *	* Log: when not in pause, device will continously send a trame of the following values:
- * 			[S/D][R/T]time,val1,val2,threshold1,threshold2\n\r
+ *	* Log: when not in pause, in simple logging (not binary) device will continously send a trame of the following values:
+ * 			[S/D][R/T]time,angle1,angle2,velocity1,velocity2,threshold1,threshold2\n\r
  *		ex:	ST12.32,32.2,6.3,36.1,6.5 in STATIC mode, testing. time is time since initiation in seconds. Angles are in degrees, velocities in deg.s-1 and m.s-1.
  *		
  *
@@ -129,26 +129,28 @@ void Beep()
 //###################################################################################
 //                             FILTERING FUNCTIONS 
 //###################################################################################
-/*void filtButt(float x)
+float filt(Dynamic_param *d, float x)
 {
   for(int k=0; k<FILT_ORDER-1; k++)
   {
-    v[k]=v[k+1];
-    vf[k]=vf[k+1];
+    d->v[k]=d->v[k+1];
+    d->vf[k]=d->vf[k+1];
   }
-  v[FILT_ORDER-1]=x;
-  vf[FILT_ORDER-1]=0;
+  d->v[FILT_ORDER-1]=x;
+  d->vf[FILT_ORDER-1]=0;
   
   for(int k=0; k<FILT_ORDER; k++)
-    vf[FILT_ORDER-1]+=FILT_COEFS_b[k]*v[FILT_ORDER-k-1];
+    d->vf[FILT_ORDER-1]+=FILT_COEFS_b[k]*d->v[FILT_ORDER-k-1];
  
   for(int k=1; k<FILT_ORDER; k++)
-    vf[FILT_ORDER-1]-=FILT_COEFS_a[k]*vf[FILT_ORDER-k-1];
-}*/
+    d->vf[FILT_ORDER-1]-=FILT_COEFS_a[k]*d->vf[FILT_ORDER-k-1];
+
+  return d->vf[FILT_ORDER-1];
+}
 
 
 //Simple high-pass filter (remove continuous component)
-float filt(Dynamic_param *d, float x)
+float filt_hp(Dynamic_param *d, float x)
 {
   for(int k=0; k<FILT_ORDER-1; k++)
   {
@@ -221,8 +223,7 @@ float GetHeading()
 		// compute heading
 		LIS3MDL::vector<int16_t> from = {1, 0, 0};
 		float heading = atan2(LIS3MDL::vector_dot(&E, &from), LIS3MDL::vector_dot(&N, &from)) * 180 / PI;
-		if (heading < 0) heading += 360;
-		return heading;
+		return abs(heading);
 	#endif
 }
 
@@ -266,10 +267,10 @@ float GetVel(Dynamic_param *d)
 	//Serial.println(d->A[1]);
 
 	//and compute linear velocity
-	//d->v_c+=(d->A[0]+(d->A[1]-d->A[0])/2.)*Dt/1000000.; //Integration w/ conversion from us to s
-	d->v_c+=((d->A[0]+4*d->A[1]+d->A[0])/2.)/6 *2* Dt/1000000.; //Integration w/ conversion from us to s
+	//d->v_c += (d->A[0]+(d->A[1]-d->A[0])/2.)*Dt/1000000.; //Integration w/ conversion from us to s
+	d->v_c += ((d->A[0]+4*d->A[1]+d->A[0])/2.)/6 * 2*Dt/1000000.; //Integration w/ conversion from us to s
 	//Serial.print(10000*V);Serial.print(" , ");
-	return abs(filt(d, d->v_c));
+	return abs(filt(d, d->v_c));//abs(d->v_c); //
 }
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
@@ -366,7 +367,7 @@ void InitDynamic()
 	AdaptThresh[1].Reset(100);
 
 	//Reset minimal threshold values
-	MinimalThresh[0]=0.02;
+	MinimalThresh[0]=0.2;
 	MinimalThresh[1]=0.02;
 	BipBip();
 }
@@ -540,18 +541,18 @@ void loop()
       PrintInt32(millis());
       PrintInt8(CoronalPlaneAngle);
       PrintInt8(TransversePlaneAngle);
-      PrintInt8((int)(LinearVelocity*1000));
-      PrintInt8((int)(AngularVelocity*1000));
+      PrintInt16((int)(LinearVelocity*1000));
+      PrintInt16((int)(AngularVelocity*1000));
       PrintInt16((int)(AdaptThresh[0].GetThreshold(Sensitivity)*100));
       PrintInt16((int)(AdaptThresh[1].GetThreshold(Sensitivity)*100));
       Serial.println("");
     #else
       Serial.print((float)(millis()/1000.), 3);
   		Serial.print(',');
-  		Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
+  		/*Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
   		Serial.print(',');
   		Serial.print(fmax(TransversePlaneAngle,0.00001), 0);
-  		Serial.print(',');
+  		Serial.print(',');*/
       Serial.print(fmax(LinearVelocity,0.00001), 3);
       Serial.print(',');
       Serial.print(fmax(AngularVelocity,0.00001), 3);
@@ -559,6 +560,8 @@ void loop()
   		Serial.print(fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]), 3);
   		Serial.print(',');
   		Serial.println(fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]), 3);
+      if(CoronalPlaneAngle>255 || TransversePlaneAngle>255 || LinearVelocity>65 || AngularVelocity>65)
+        Serial.println("WARNING");
     #endif
 	}
 

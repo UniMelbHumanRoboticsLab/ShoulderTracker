@@ -32,9 +32,9 @@ LIS3MDL::vector<int16_t> m_max = { +3276,  +3562,  +3024};
 #endif
 
 
-#define FILT_ORDER 5
-//const float FILT_COEFS_a[FILT_ORDER]={1.0000, 3.5923077985, -4.8476482131, 2.9182277565, -0.6628874924};
-//const float FILT_COEFS_b[FILT_ORDER]={1., .0, -2., .0, 1.};
+#define FILT_ORDER 2
+const float FILT_COEFS_a[FILT_ORDER]={1.0000, -0.5095};
+const float FILT_COEFS_b[FILT_ORDER]={0.2452, 0.2452};
 
 enum MODE {STATIC, DYNAMIC};
 

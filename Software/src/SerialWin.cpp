@@ -193,7 +193,7 @@ int Serial::ReadBinary(char *mode, char *state, float *device_time, float *vals,
 {
     if(Connected)
     {
-        int nb_bytes_expected=1+1+4+1+1+1+1+2+2+2;//Ending by CRLF.
+        int nb_bytes_expected=1+1+4+1+1+2+2+2+2+2;//Ending by CRLF.
         unsigned char *buffer=new unsigned char[nb_bytes_expected-1];
 
         //Get first char of the sequence
@@ -225,13 +225,13 @@ int Serial::ReadBinary(char *mode, char *state, float *device_time, float *vals,
             //Second angle deg
             vals[1] = buffer[6];
             //First velocity
-            vals[2] = (float)(buffer[7]/1000.);
+            vals[2] = (float)(Int16toInt(buffer[7], buffer[8])/1000.);
             //Secondvelocity
-            vals[3] = (float)(buffer[8]/1000.);
+            vals[3] = (float)(Int16toInt(buffer[9], buffer[10])/1000.);
             //First threshold
-            thresh[0] = (float)(Int16toInt(buffer[9], buffer[10])/100.);
+            thresh[0] = (float)(Int16toInt(buffer[11], buffer[12])/100.);
             //Second threshold
-            thresh[1] = (float)(Int16toInt(buffer[11], buffer[12])/100.);
+            thresh[1] = (float)(Int16toInt(buffer[13], buffer[14])/100.);
 
             //CHECKSUM???
             //return -2;

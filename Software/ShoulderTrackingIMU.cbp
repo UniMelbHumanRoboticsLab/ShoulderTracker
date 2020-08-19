@@ -41,6 +41,7 @@
 					<Add directory="C:/fltk-1.3.5" />
 				</Compiler>
 				<Linker>
+					<Add option="-O2" />
 					<Add option="-static-libgcc" />
 					<Add option="-static" />
 					<Add option="-mwindows -Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc -lfltk -lole32 -luuid -lcomctl32" />

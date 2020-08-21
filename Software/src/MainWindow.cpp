@@ -80,14 +80,14 @@ void UpdateValues_cb(void * param)
             {
                 if(vals[2]>thresholds[0]||vals[3]>thresholds[1])
                 {
-                    PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                   // PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }
             }
             else
             {
                 if(vals[0]>thresholds[0]||vals[1]>thresholds[1])
                 {
-                    PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                    //PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }
             }
             Fl::repeat_timeout(0.005, UpdateValues_cb, param); // Ideally 100Hz

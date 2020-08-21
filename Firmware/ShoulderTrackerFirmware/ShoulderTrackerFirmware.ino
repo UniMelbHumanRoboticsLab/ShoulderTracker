@@ -270,7 +270,8 @@ float GetVel(Dynamic_param *d)
 	//d->v_c += (d->A[0]+(d->A[1]-d->A[0])/2.)*Dt/1000000.; //Integration w/ conversion from us to s
 	d->v_c += ((d->A[0]+4*d->A[1]+d->A[0])/2.)/6 * 2*Dt/1000000.; //Integration w/ conversion from us to s
 	//Serial.print(10000*V);Serial.print(" , ");
-	return abs(filt(d, d->v_c));//abs(d->v_c); //
+  float v=filt(d, d->v_c);
+	return abs(v);//WARNING: need to be in two lines as Arduino has a crappy abs() function implementation
 }
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
@@ -367,8 +368,8 @@ void InitDynamic()
 	AdaptThresh[1].Reset(100);
 
 	//Reset minimal threshold values
-	MinimalThresh[0]=0.2;
-	MinimalThresh[1]=0.02;
+	MinimalThresh[0]=0.3;
+	MinimalThresh[1]=0.04;
 	BipBip();
 }
 
@@ -383,7 +384,7 @@ void InitDynamic()
 //###################################################################################
 //                                PRINTING FUNCTIONS 
 //###################################################################################
-void PrintInt8(int val)
+void PrintInt8(unsigned short int val)
 {
   char val8 = (abs(val)>255)?255:abs(val);
   Serial.write(val8);
@@ -391,7 +392,7 @@ void PrintInt8(int val)
 
 void PrintInt16(unsigned int val)
 {
-  unsigned short int val16 = (abs(val)>65535)?65535:abs(val);
+  word val16 = (abs(val)>65535)?65535:abs(val);
   Serial.write(lowByte(val16));
   Serial.write(highByte(val16));
 }
@@ -434,9 +435,8 @@ void setup()
 	//And keep Dynamic mode as default
 	Mode=DYNAMIC;Init();
 
-
 	//And serial if needed
-	#if defined(LOG) || defined(DEBUG) || defined(MEMORY_DEBUG)
+	#if defined(LOG) || defined(BINARY_LOG) || defined(DEBUG) || defined(MEMORY_DEBUG)
 	Serial.begin(19200);
 	while (!Serial) {
 		; // wait for serial port to connect.
@@ -467,11 +467,14 @@ void loop()
 	char logBeep='0', ErrorFlag='0';
 
   //Retrieve values from sensors
-  int CoronalPlaneAngle=(int)(abs(GetAngleAcc(&Static)));
-  int TransversePlaneAngle=(int)(abs(GetAngleMag(&Static)));
+  float tmp=GetAngleAcc(&Static);
+  int CoronalPlaneAngle=(int)(abs(tmp));
+  tmp=GetAngleMag(&Static);
+  int TransversePlaneAngle=(int)(abs(tmp));
   float LinearVelocity=GetVel(&Dynamic);
   float AngularVelocity=sqrt(gyro.g.x*GYRO_2_DPS*gyro.g.x*GYRO_2_DPS+gyro.g.y*GYRO_2_DPS*gyro.g.y*GYRO_2_DPS+gyro.g.z*GYRO_2_DPS*gyro.g.z*GYRO_2_DPS);
-  
+  float diff[2], thresh[2];
+
 	switch(Mode)
 	{
 		case STATIC:
@@ -500,7 +503,6 @@ void loop()
 		AdaptThresh[1].Store(current_val[1]);
 	
 		//Apply feedback if needed
-		float diff[2], thresh[2];
 		thresh[0]=fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]);
 		thresh[1]=fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]);
 		diff[0]=(current_val[0]-thresh[0])/thresh[0];
@@ -543,23 +545,23 @@ void loop()
       PrintInt8(TransversePlaneAngle);
       PrintInt16((int)(LinearVelocity*1000));
       PrintInt16((int)(AngularVelocity*1000));
-      PrintInt16((int)(AdaptThresh[0].GetThreshold(Sensitivity)*100));
-      PrintInt16((int)(AdaptThresh[1].GetThreshold(Sensitivity)*100));
+      PrintInt16((int)(thresh[0]*100));
+      PrintInt16((int)(thresh[1]*100));
       Serial.println("");
     #else
       Serial.print((float)(millis()/1000.), 3);
   		Serial.print(',');
-  		/*Serial.print(fmax(CoronalPlaneAngle,0.00001), 0);
+  		Serial.print(CoronalPlaneAngle, 0);
   		Serial.print(',');
-  		Serial.print(fmax(TransversePlaneAngle,0.00001), 0);
-  		Serial.print(',');*/
-      Serial.print(fmax(LinearVelocity,0.00001), 3);
-      Serial.print(',');
-      Serial.print(fmax(AngularVelocity,0.00001), 3);
-      Serial.print(',');
-  		Serial.print(fmax(AdaptThresh[0].GetThreshold(Sensitivity), MinimalThresh[0]), 3);
+  		Serial.print(TransversePlaneAngle, 0);
   		Serial.print(',');
-  		Serial.println(fmax(AdaptThresh[1].GetThreshold(Sensitivity), MinimalThresh[1]), 3);
+      Serial.print(LinearVelocity,0.00001, 3);
+      Serial.print(',');
+      Serial.print(AngularVelocity,0.00001, 3);
+      Serial.print(',');
+  		Serial.print(thresh[0], 3);
+  		Serial.print(',');
+  		Serial.println(thresh[1], 3);
       if(CoronalPlaneAngle>255 || TransversePlaneAngle>255 || LinearVelocity>65 || AngularVelocity>65)
         Serial.println("WARNING");
     #endif

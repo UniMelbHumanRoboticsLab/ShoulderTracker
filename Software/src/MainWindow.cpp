@@ -76,18 +76,19 @@ void UpdateValues_cb(void * param)
         {
             fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
             //Provide audio feedback if required
+            //TODO: Chekc if in test or start (<5min)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
             if(mw->Mode=='D')
             {
-                if(vals[2]>thresholds[0]||vals[3]>thresholds[1])
+                if(vals[3]>thresholds[1])//Use only rotational velocity
                 {
-                   // PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                   PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }
             }
             else
             {
                 if(vals[0]>thresholds[0]||vals[1]>thresholds[1])
                 {
-                    //PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                    PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                 }
             }
             Fl::repeat_timeout(0.005, UpdateValues_cb, param); // Ideally 100Hz

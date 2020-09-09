@@ -221,12 +221,12 @@ int Serial::ReadBinary(char *mode, char *state, float *device_time, float *vals,
             //Time in s
             (*device_time) = (float) (Int32toInt(buffer[1], buffer[2], buffer[3], buffer[4]) /1000.); //LSB first
             //First angle deg
-            vals[0] = buffer[5];
+            vals[0] = (signed char) buffer[5];
             //Second angle deg
-            vals[1] = buffer[6];
+            vals[1] = (signed char) buffer[6];
             //First velocity
             vals[2] = (float)(Int16toInt(buffer[7], buffer[8])/1000.);
-            //Secondvelocity
+            //Second velocity
             vals[3] = (float)(Int16toInt(buffer[9], buffer[10])/1000.);
             //First threshold
             thresh[0] = (float)(Int16toInt(buffer[11], buffer[12])/100.);

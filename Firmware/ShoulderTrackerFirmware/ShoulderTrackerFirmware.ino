@@ -9,8 +9,8 @@
  *		-CDP: Pause device (no feedback, no log).
  *		-CDR: Run (unpause).
  *		-CDT: Test mode (log, no feedback).
- *		-CDS: Switch to STATIC mode (feedback and log are angles).
- *		-CDD: Switch to DYNAMIC mode (feedback and log are angular and linear velocities).
+ *		-CDS: Switch to STATIC mode (feedback on log are angles).
+ *		-CDD: Switch to DYNAMIC mode (feedback on angular velocity).
  *   Response in the form OKxy with x=[S/D] the current/applied mode and y=[R/T/P] the current state.
  *	* Log: when not in pause, in simple logging (not binary) device will continously send a trame of the following values:
  * 			[S/D][R/T]time,angle1,angle2,velocity1,velocity2,threshold1,threshold2\n\r
@@ -26,10 +26,11 @@
 
 #include "AdaptiveThresholding.h"
 #include "StaticParam.h"
+#include "Filter.h"
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
-#define BINARY_LOG //Optimised faster (binary) log
+//#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;
@@ -37,6 +38,7 @@ unsigned long int t, Dt;
 Static_param Static;
 Dynamic_param Dynamic;
 MODE Mode;
+Filter hp_filter;
 
 #ifdef V1_IMU02A
 L3G gyro; //Gyroscopes
@@ -48,7 +50,7 @@ LSM6 gyro; //Gyroscopes and accelerometers
 LIS3MDL compass; //Magnetometers
 #endif
 
-int Sensitivity=99; //0-100%: the higher the less sensitive
+int Sensitivity=90; //0-100%: the higher the less sensitive
 AdaptiveThresholding AdaptThresh[2];
 float MinimalThresh[2]; //Minimal values: threshold c'ant be lower than these: see InitDynamic / InitStatic for values
 
@@ -131,35 +133,21 @@ void Beep()
 //###################################################################################
 float filt(Dynamic_param *d, float x)
 {
-  for(int k=0; k<FILT_ORDER-1; k++)
+  for(int k=0; k<FILT_ORDER_LP-1; k++)
   {
     d->v[k]=d->v[k+1];
     d->vf[k]=d->vf[k+1];
   }
-  d->v[FILT_ORDER-1]=x;
-  d->vf[FILT_ORDER-1]=0;
+  d->v[FILT_ORDER_LP-1]=x;
+  d->vf[FILT_ORDER_LP-1]=0;
   
-  for(int k=0; k<FILT_ORDER; k++)
-    d->vf[FILT_ORDER-1]+=FILT_COEFS_b[k]*d->v[FILT_ORDER-k-1];
+  for(int k=0; k<FILT_ORDER_LP; k++)
+    d->vf[FILT_ORDER_LP-1]+=FILT_COEFS_b[k]*d->v[FILT_ORDER_LP-k-1];
  
-  for(int k=1; k<FILT_ORDER; k++)
-    d->vf[FILT_ORDER-1]-=FILT_COEFS_a[k]*d->vf[FILT_ORDER-k-1];
+  for(int k=1; k<FILT_ORDER_LP; k++)
+    d->vf[FILT_ORDER_LP-1]-=FILT_COEFS_a[k]*d->vf[FILT_ORDER_LP-k-1];
 
-  return d->vf[FILT_ORDER-1];
-}
-
-
-//Simple high-pass filter (remove continuous component)
-float filt_hp(Dynamic_param *d, float x)
-{
-  for(int k=0; k<FILT_ORDER-1; k++)
-  {
-    d->v[k]=d->v[k+1];
-    d->vf[k]=d->vf[k+1];
-  }
-  d->v[FILT_ORDER-1]=x;
-
-  return d->vf[FILT_ORDER-1]=d->v[FILT_ORDER-1]-0.25*(d->v[FILT_ORDER-2]+d->v[FILT_ORDER-3]+d->v[FILT_ORDER-4]+d->v[FILT_ORDER-5]);
+  return d->vf[FILT_ORDER_LP-1];
 }
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
@@ -186,17 +174,11 @@ float GetAngleAcc(Static_param *s)
 		s->A[2]=gyro.a.z;
 	#endif
 
-	//Normalize current A vector
-	float norm=sqrt(s->A[0]*s->A[0]+s->A[1]*s->A[1]+s->A[2]*s->A[2]);
-	s->A[0]/=norm;
-	s->A[1]/=norm;
-	s->A[2]/=norm;
-
-	//Angle between A and ARef
-	return acos(s->A[0]*s->ARef[0]+s->A[1]*s->ARef[1]+s->A[2]*s->ARef[2])*180/3.14157;
+  //Angle between X and Y projections of gravity
+  return atan2(s->A[0], -s->A[2])*180/PI;
 }
 
-float GetHeading()
+float GetHeading(Static_param *s)
 {
 	#ifdef V1_IMU02A
 		return compass.heading();
@@ -221,9 +203,9 @@ float GetHeading()
 		LIS3MDL::vector_normalize(&N);
 
 		// compute heading
-		LIS3MDL::vector<int16_t> from = {1, 0, 0};
+		LIS3MDL::vector<int16_t> from = {s->HeadingSign, 0, 0};
 		float heading = atan2(LIS3MDL::vector_dot(&E, &from), LIS3MDL::vector_dot(&N, &from)) * 180 / PI;
-		return abs(heading);
+		return heading;
 	#endif
 }
 
@@ -231,17 +213,13 @@ float GetHeading()
 //Horizontal angle from magnetometer
 float GetAngleMag(Static_param *s)
 {
-	//Directly use compass heading value 
-	if(GetHeading()<180)
-		return GetHeading()-s->MAngleRef;
-	else
-		return (GetHeading()-360)-s->MAngleRef;
+	return GetHeading(s)-s->MAngleRef;
 }
 
 
 
 //Linear velocity: integrate and filter acceleration
-float GetVel(Dynamic_param *d)
+float GetLinVel(Dynamic_param *d)
 {
 	float a[3];
 	#ifdef V1_IMU02A
@@ -264,7 +242,6 @@ float GetVel(Dynamic_param *d)
 	d->A[1]=d->A[2];
 	d->A[2]=sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
 	d->A[2]-=9.81;
-	//Serial.println(d->A[1]);
 
 	//and compute linear velocity
 	//d->v_c += (d->A[0]+(d->A[1]-d->A[0])/2.)*Dt/1000000.; //Integration w/ conversion from us to s
@@ -272,6 +249,12 @@ float GetVel(Dynamic_param *d)
 	//Serial.print(10000*V);Serial.print(" , ");
   float v=filt(d, d->v_c);
 	return abs(v);//WARNING: need to be in two lines as Arduino has a crappy abs() function implementation
+}
+
+//Angular vel from gyro
+float GetAngVel()
+{
+  return sqrt(gyro.g.x*GYRO_2_DPS*gyro.g.x*GYRO_2_DPS+gyro.g.y*GYRO_2_DPS*gyro.g.y*GYRO_2_DPS+gyro.g.z*GYRO_2_DPS*gyro.g.z*GYRO_2_DPS);
 }
 //-----------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------
@@ -307,40 +290,19 @@ void InitStatic()
 	//Beep
 	Bip();
 
-	//For the acceleros
-	//Take 200 values and average
-	int nb_val=200;
-	for(int i=0; i<nb_val; i++)
-	{
-		compass.read();
-		#ifdef V1_IMU02A
-			Static.ARef[0]+=compass.a.x;
-			Static.ARef[1]+=compass.a.y;
-			Static.ARef[2]+=compass.a.z;
-		#endif
-		#ifdef V2_ALTIMUv10
-			gyro.read();
-			Static.ARef[0]+=gyro.a.x;
-			Static.ARef[1]+=gyro.a.y;
-			Static.ARef[2]+=gyro.a.z;
-		#endif
-	}
-	Static.ARef[0]/=(float)nb_val;
-	Static.ARef[1]/=(float)nb_val;
-	Static.ARef[2]/=(float)nb_val;
-	//Normalize the final vector
-	float norm=sqrt(Static.ARef[0]*Static.ARef[0]+Static.ARef[1]*Static.ARef[1]+Static.ARef[2]*Static.ARef[2]);
-	Static.ARef[0]/=norm;
-	Static.ARef[1]/=norm;
-	Static.ARef[2]/=norm;
+	//Take reference heading angle
+  gyro.read();
+  compass.read();
+  //ensure we have in a safe quadrant (switch sign of reference vector to do so)
+  Static.HeadingSign=1;//default
+  Static.MAngleRef=0;
+  if(fabs(GetAngleMag(&Static)>90))
+  {
+    Static.HeadingSign=-1;
+  }
+  Static.MAngleRef=GetAngleMag(&Static);
 
-	//For the mag
-	if(GetHeading()<180)
-		Static.MAngleRef=GetHeading();
-	else
-		Static.MAngleRef=(GetHeading()-360);
-
-	//Init threhold arbitrarily to 20
+	//Init threshold arbitrarily to 20
 	Static.AngleThresh=20;
 
 	//Reinit adaptive threshold
@@ -348,8 +310,8 @@ void InitStatic()
 	AdaptThresh[1].Reset(1);
 
 	//Reset minimal threshold values
-	MinimalThresh[0]=10.;
-	MinimalThresh[1]=10.;
+	MinimalThresh[0]=10.;//Ensure above noise level
+	MinimalThresh[1]=10.;//Ensure above noise level
 
 	//Done
 	BipBip();
@@ -364,12 +326,12 @@ void InitDynamic()
 	Bip();
 
 	//Reinit adaptive threshold
-	AdaptThresh[0].Reset(100);
-	AdaptThresh[1].Reset(100);
+	AdaptThresh[0].Reset(10);
+	AdaptThresh[1].Reset(10);
 
 	//Reset minimal threshold values
-	MinimalThresh[0]=0.3;
-	MinimalThresh[1]=0.04;
+	MinimalThresh[0]=0.3;//Ensure above noise level
+	MinimalThresh[1]=0.04;//Ensure above noise level
 	BipBip();
 }
 
@@ -384,20 +346,42 @@ void InitDynamic()
 //###################################################################################
 //                                PRINTING FUNCTIONS 
 //###################################################################################
-void PrintInt8(unsigned short int val)
+void PrintUInt8(unsigned int val)
 {
   char val8 = (abs(val)>255)?255:abs(val);
   Serial.write(val8);
 }
 
-void PrintInt16(unsigned int val)
+void PrintInt8(int val)
+{
+  signed char val8;
+  if(val>0)
+    val8 = (abs(val)>127)?127:abs(val);
+  else
+    val8 = (abs(val)>127)?-127:val;
+  Serial.write(val8);
+}
+
+void PrintUInt16(unsigned int val)
 {
   word val16 = (abs(val)>65535)?65535:abs(val);
   Serial.write(lowByte(val16));
   Serial.write(highByte(val16));
 }
 
-void PrintInt32(unsigned long int val)
+void PrintInt16(int val)
+{
+  word val16;
+  if(val>0)
+    val16 = (abs(val)>32767)?32767:abs(val);
+  else
+    val16 = (abs(val)>32767)?-32767:val;
+  
+  Serial.write(lowByte(val16));
+  Serial.write(highByte(val16));
+}
+
+void PrintUInt32(unsigned long int val)
 {
   unsigned long int val32 = (abs(val)>65535*65535)?65535*65535:abs(val);
   unsigned int tmp = val32 & 0xFFFF; //lower 16 bits
@@ -435,13 +419,11 @@ void setup()
 	//And keep Dynamic mode as default
 	Mode=DYNAMIC;Init();
 
-	//And serial if needed
-	#if defined(LOG) || defined(BINARY_LOG) || defined(DEBUG) || defined(MEMORY_DEBUG)
+  //Serial com
 	Serial.begin(19200);
 	while (!Serial) {
 		; // wait for serial port to connect.
 	}
-	#endif
 	Pause=true;
   t=micros();
 }
@@ -467,14 +449,12 @@ void loop()
 	char logBeep='0', ErrorFlag='0';
 
   //Retrieve values from sensors
-  float tmp=GetAngleAcc(&Static);
-  int CoronalPlaneAngle=(int)(abs(tmp));
-  tmp=GetAngleMag(&Static);
-  int TransversePlaneAngle=(int)(abs(tmp));
-  float LinearVelocity=GetVel(&Dynamic);
-  float AngularVelocity=sqrt(gyro.g.x*GYRO_2_DPS*gyro.g.x*GYRO_2_DPS+gyro.g.y*GYRO_2_DPS*gyro.g.y*GYRO_2_DPS+gyro.g.z*GYRO_2_DPS*gyro.g.z*GYRO_2_DPS);
+  int CoronalPlaneAngle=(int)GetAngleAcc(&Static);
+  int TransversePlaneAngle=(int)GetAngleMag(&Static);
+  float LinearVelocity=GetLinVel(&Dynamic);
+  float AngularVelocity=GetAngVel();
   float diff[2], thresh[2];
-
+  
 	switch(Mode)
 	{
 		case STATIC:
@@ -508,8 +488,8 @@ void loop()
 		diff[0]=(current_val[0]-thresh[0])/thresh[0];
 		diff[1]=(current_val[1]-thresh[1])/thresh[1];
 		float m_diff=fmax(diff[0], diff[1]);
-		//No feedback during the first 60s or when in TESTING
-		if(m_diff>0 && AdaptThresh[0].GetNbPoints()>60 && !Testing) 
+		//No feedback when in TESTING
+		if(m_diff>0 && !Testing) 
 		{
 			logBeep=1;
 			Vibrate(m_diff);
@@ -517,7 +497,7 @@ void loop()
 		}
 		else
 		{
-			logBeep=0;
+			logBeep=0; 
 			Vibrate(0);
 			analogWrite(BeepPin, 0);
 		}
@@ -540,24 +520,24 @@ void loop()
 		Serial.print(header_letters[0]);
     Serial.print(header_letters[1]);
     #ifdef BINARY_LOG
-      PrintInt32(millis());
+      PrintUInt32(millis());
       PrintInt8(CoronalPlaneAngle);
       PrintInt8(TransversePlaneAngle);
-      PrintInt16((int)(LinearVelocity*1000));
-      PrintInt16((int)(AngularVelocity*1000));
-      PrintInt16((int)(thresh[0]*100));
-      PrintInt16((int)(thresh[1]*100));
+      PrintUInt16((int)(LinearVelocity*1000));
+      PrintUInt16((int)(AngularVelocity*1000));
+      PrintUInt16((int)(thresh[0]*100));
+      PrintUInt16((int)(thresh[1]*100));
       Serial.println("");
     #else
       Serial.print((float)(millis()/1000.), 3);
   		Serial.print(',');
-  		Serial.print(CoronalPlaneAngle, 0);
+  		Serial.print(CoronalPlaneAngle);
   		Serial.print(',');
-  		Serial.print(TransversePlaneAngle, 0);
+  		Serial.print(TransversePlaneAngle);
   		Serial.print(',');
-      Serial.print(LinearVelocity,0.00001, 3);
+      Serial.print(LinearVelocity, 3);
       Serial.print(',');
-      Serial.print(AngularVelocity,0.00001, 3);
+      Serial.print(AngularVelocity, 3);
       Serial.print(',');
   		Serial.print(thresh[0], 3);
   		Serial.print(',');

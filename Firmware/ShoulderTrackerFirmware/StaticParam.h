@@ -23,8 +23,8 @@
 #include <LIS3MDL.h>
 #include <LSM6.h>
 //Extreme magnetometer values to calibrate
-LIS3MDL::vector<int16_t> m_min = { -4395,  -3894,  -4690};
-LIS3MDL::vector<int16_t> m_max = { +3276,  +3562,  +3024};
+LIS3MDL::vector<int16_t> m_min = { -4525,  -4806,  -3840};
+LIS3MDL::vector<int16_t> m_max = { +2742,  +2178,  +3343};
 
 #define BuzzPin 5
 #define BeepPin 11
@@ -32,17 +32,18 @@ LIS3MDL::vector<int16_t> m_max = { +3276,  +3562,  +3024};
 #endif
 
 
-#define FILT_ORDER 2
-const float FILT_COEFS_a[FILT_ORDER]={1.0000, -0.5095};
-const float FILT_COEFS_b[FILT_ORDER]={0.2452, 0.2452};
+#define FILT_ORDER_LP 2
+const float FILT_COEFS_a[FILT_ORDER_LP]={1.0000, -0.5095};
+const float FILT_COEFS_b[FILT_ORDER_LP]={0.2452, 0.2452};
 
 enum MODE {STATIC, DYNAMIC};
 
 typedef struct
 {
-	float A[3], ARef[3];
+	float A[3];
 	float MAngleRef;
 	float AngleThresh;
+  int HeadingSign;
 }Static_param;
 
 
@@ -50,5 +51,5 @@ typedef struct
 {
   float A[2];
   float v_c;
-  float v[FILT_ORDER], vf[FILT_ORDER];
+  float v[FILT_ORDER_LP], vf[FILT_ORDER_LP];
 }Dynamic_param;

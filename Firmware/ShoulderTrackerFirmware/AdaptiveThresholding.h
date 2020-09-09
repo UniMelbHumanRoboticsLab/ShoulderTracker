@@ -80,19 +80,10 @@ class AdaptiveThresholding
     float ScalingFactor;
     
     unsigned int tmpNbVal;
-    double tmpAvg;
+    double tmpMax;//tmpAvg;
 
     //Constructor: reserve vectors memory and init values
-    AdaptiveThresholding()
-    {
-        Ordered.reserve(NB_PTS);
-        OrderedOrder.reserve(NB_PTS);
-        
-        ScalingFactor=1;
-        Init();
-    }
-
-    AdaptiveThresholding(float scale)
+    AdaptiveThresholding(float scale=1)
     {
         Ordered.reserve(NB_PTS);
         OrderedOrder.reserve(NB_PTS);
@@ -103,7 +94,7 @@ class AdaptiveThresholding
     }
     
     //Reset everything: clear vectors and reinit values
-    void Reset(float scale)
+    void Reset(float scale=1)
     {
         //Clear vectors
         Ordered.clear();
@@ -125,7 +116,8 @@ class AdaptiveThresholding
       
         StorageT=micros();
         tmpNbVal=0;
-        tmpAvg=0;
+        //tmpAvg=0;
+        tmpMax=0;
     }
     
     //Getters/setters
@@ -134,26 +126,26 @@ class AdaptiveThresholding
 
 
     //Add a value to storage
-    void Store(float V)
+    void Store(float v)
     { 
       //If we are in the current second
       if(millis()-StorageT<1000 && millis()-StorageT>0)
       {
          tmpNbVal++;
-    
-         /*Get max
-         tmpMax=uchar_max(tmpMax, V*ScalingFactor);
-         //Get min
-         tmpMin=uchar_min(tmpMin, V*ScalingFactor);*/
+
          //Avg: keep it in float until storage
-         tmpAvg+=V;
+         //tmpAvg+=V;
+         //Keep max value over last second
+         tmpMax=fmax(tmpMax, v);
       }
       //When current second is over: store and reset
       else
       {
          //Compute average
-         tmpAvg/=(double)tmpNbVal;
-         tmpAvg*=ScalingFactor;
+         //tmpAvg/=(double)tmpNbVal;
+         //tmpAvg*=ScalingFactor;
+         //Compute scaled max value
+         tmpMax*=ScalingFactor;
         
          //Store in memory
          #ifdef MEMORY_DEBUG
@@ -161,12 +153,13 @@ class AdaptiveThresholding
          #endif
          /*Debug
          Serial.print(millis());Serial.print("ms, ");Serial.print(tmpNbVal);Serial.print("sp, ");Serial.println(tmpAvg);*/
-         Insert((ValuesType) tmpAvg);
+         Insert((ValuesType) tmpMax);
          
          //Reset orig time
          StorageT=millis();
          //Reset tmp values
-         tmpAvg=0;
+         tmpMax=0;
+         //tmpAvg=0;
          tmpNbVal=0;
       }
     }

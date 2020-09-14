@@ -30,7 +30,7 @@
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
-//#define BINARY_LOG //Optimised faster (binary) log
+#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;

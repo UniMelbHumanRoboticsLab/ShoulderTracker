@@ -1,2 +1,2 @@
 # ShoulderTracker
-IMU based device (hardware, firmware and software) to monitor trunk and shoulder compensation in rehabilitation
+IMU based device ([hardware](Hardware), [firmware](Firmware) and [software](Software)) to monitor trunk and shoulder compensation in rehabilitation

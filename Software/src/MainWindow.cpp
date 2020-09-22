@@ -317,6 +317,15 @@ void AutoConnectTimer_cb(void * param)
             mw->OnOffBox->label("ON");
             mw->OnOffBox->redraw();
         }
+
+
+        //If first time, show game window and set in test mode
+        if(!mw->WasConnected)
+        {
+            mw->AssessGameWindow->show();
+            mw->SerialCom->SetTesting();
+            mw->WasConnected = true;
+        }
     }
     else
     {
@@ -469,6 +478,11 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
         //Run timer for auto-connect
         Fl::add_timeout(1.0, AutoConnectTimer_cb, (void *)this);
     }
+    AssessGameWindow = new GameWindow(SerialCom);
+    WasConnected = false;
+    AssessGameWindow->hide(); //Wait for device to connect to show it
+
+
     //Add mouse activity management timer (every 5s)
     Fl::add_timeout(5, CheckMouseActivity_cb, (void *)this);
 }

@@ -233,7 +233,7 @@ float GetLinVel(Dynamic_param *d)
 		a[1]=gyro.a.y;
 		a[2]=gyro.a.z;
 	#endif
-	
+
 	for(int i=0; i<3; i++)
 	{
 		a[i]*=9.81*ACC_2_MS2;
@@ -241,7 +241,6 @@ float GetLinVel(Dynamic_param *d)
 	d->A[0]=d->A[1];
 	d->A[1]=d->A[2];
 	d->A[2]=sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
-	d->A[2]-=9.81;
 
 	//and compute linear velocity
 	//d->v_c += (d->A[0]+(d->A[1]-d->A[0])/2.)*Dt/1000000.; //Integration w/ conversion from us to s

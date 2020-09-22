@@ -37,6 +37,7 @@
 #endif
 #include "Plots.h"
 #include "WinMouseMonitor.h"
+#include "GameWindow.h"
 
 
 void UpdateValues_cb(void * param);
@@ -71,6 +72,7 @@ class MainWindow
 
     private:
         Fl_Double_Window *Window, *MinWindow;
+        GameWindow *AssessGameWindow;
 
         Fl_Box *StatusBar;
         Plots * Plot;
@@ -93,6 +95,7 @@ class MainWindow
         int NbMissedUpdates, NbMissedConnections=0;
         char Mode, State;
         mode_type InitMode;
+        bool WasConnected;
 };
 
 #endif // MAINWINDOW_H

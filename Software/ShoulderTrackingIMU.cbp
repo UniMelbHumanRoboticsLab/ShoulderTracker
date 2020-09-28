@@ -95,6 +95,8 @@
 		<Unit filename="src/MainWindow.h" />
 		<Unit filename="src/Plots.cpp" />
 		<Unit filename="src/Plots.h" />
+		<Unit filename="src/Registry.cpp" />
+		<Unit filename="src/Registry.h" />
 		<Unit filename="src/Serial.cpp">
 			<Option target="Debug" />
 			<Option target="Release" />

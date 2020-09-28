@@ -75,23 +75,25 @@ void UpdateValues_cb(void * param)
         if(mw->Play)
         {
             fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
-            //Provide audio feedback if required
-            //TODO: Chekc if in test or start (<5min)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-            if(mw->Mode=='D')
+            //Provide audio feedback if required (not in assessment mode)
+            if(!mw->AssessGameWindow->visible())
             {
-                if(vals[3]>thresholds[1])//Use only rotational velocity
+                if(mw->Mode=='D')
                 {
-                   PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                    if(vals[3]>thresholds[1])//Use only rotational velocity
+                    {
+                       PlaySound(TEXT("slowdown.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                    }
+                }
+                else
+                {
+                    if(vals[0]>thresholds[0]||vals[1]>thresholds[1])
+                    {
+                        PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
+                    }
                 }
             }
-            else
-            {
-                if(vals[0]>thresholds[0]||vals[1]>thresholds[1])
-                {
-                    PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
-                }
-            }
-            Fl::repeat_timeout(0.005, UpdateValues_cb, param); // Ideally 100Hz
+            Fl::repeat_timeout(0.005, UpdateValues_cb, param);//Ideally 100Hz
         }
     }
     else
@@ -151,11 +153,23 @@ void PlayPauseButton_cb(Fl_Widget * widget, void * param)
 
     if(!mw->Play) //Was paused
     {
-        //Ask untill success
-        while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetState(true))
-            Fl::wait(0.1);
+        //If in assessment mode (Game window is visible, request test mode, play otherwise)
+        if(mw->AssessGameWindow->visible())
+        {
+            //Ask untill success
+            while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetTesting())
+                Fl::wait(0.1);
 
-        printf("Play\n");
+            printf("Testing\n");
+        }
+        else
+        {
+            //Ask untill success
+            while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetState(true))
+                Fl::wait(0.1);
+
+            printf("Play\n");
+        }
         //Reset missed values counter
         mw->NbMissedUpdates=0;
 
@@ -186,6 +200,7 @@ void PlayPauseButton_cb(Fl_Widget * widget, void * param)
         while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetState(false))
             Fl::wait(0.1);
         printf("Pause\n");
+
         mw->Play=false;
         mw->OnOffBox->color(FL_YELLOW);
         mw->TimeLabel->suspended(1);//Pause timer
@@ -257,12 +272,9 @@ void Quit_cb(Fl_Widget * widget, void * param)
 
     //Check if still receiving (meaning that device still ON)
     //and thus remind user to turn it off
-    if(mw->NbMissedUpdates<10 && mw->Play)
-    {
-        mw->SerialCom->SetState(false);
-        fl_message_title("ShoulderTracker");
-        fl_alert("Make sure you turned OFF the device !");
-    }
+    mw->SerialCom->SetState(false);
+    fl_message_title("ShoulderTracker");
+    fl_alert("Make sure you turned OFF the device !");
 
     //Close logging if needed
     if(mw->logFile)
@@ -481,7 +493,6 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
     AssessGameWindow = new GameWindow(SerialCom);
     WasConnected = false;
     AssessGameWindow->hide(); //Wait for device to connect to show it
-
 
     //Add mouse activity management timer (every 5s)
     Fl::add_timeout(5, CheckMouseActivity_cb, (void *)this);

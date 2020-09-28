@@ -49,6 +49,7 @@ void ModeGroup_cb(Fl_Widget * widget, void * param);
 void FreqButton_cb(Fl_Widget * widget, void * param);
 void MoveButton_cb(Fl_Widget * widget, void * param);
 void Quit_cb(Fl_Widget * widget, void * param);
+void SetInterventionButton_cb(Fl_Widget * widget, void * param);
 
 
 
@@ -59,6 +60,9 @@ class MainWindow
         ~MainWindow();
 
         void GenerateFilename();
+        bool ReadInterventionState();
+        void SetToIntervention();
+        void SetToBaseline();
 
         friend void UpdateValues_cb(void * param);
         friend void CheckMouseActivity_cb(void * param);
@@ -69,8 +73,9 @@ class MainWindow
         friend void FreqButton_cb(Fl_Widget * widget, void * param);
         friend void MoveButton_cb(Fl_Widget * widget, void * param);
         friend void Quit_cb(Fl_Widget * widget, void * param);
+        friend void SetInterventionButton_cb(Fl_Widget * widget, void * param);
 
-    private:
+    public:
         Fl_Double_Window *Window, *MinWindow;
         GameWindow *AssessGameWindow;
 
@@ -82,21 +87,21 @@ class MainWindow
         Fl_Radio_Round_Button *StaticButton, *DynamicButton;
         Fl_File_Input * FilenameInput;
 
-
         Fl_Box *TitleBox;
         Fl_Box *OnOffBox;
         Fl_TimerSimple *TimeLabel;
-        Fl_Button *QuitButton;
+        Fl_Button *QuitButton, *SetInterventionButton;
 
         Serial *SerialCom;
-        FILE * logFile;
+        FILE *logFile;
         char Filename[1024], logPath[FL_PATH_MAX];
+        Fl_Preferences *Preferences;
         bool Play, MouseActive;
-        int NbMissedUpdates, NbMissedConnections=0;
+        int NbMissedUpdates, NbMissedConnections;
         char Mode, State;
         mode_type InitMode;
         bool WasConnected;
-        bool InterventionStarted; //! When true, feedback will be provided during the session, otherwise (baseline period) no feedback is provided, device stays in test mode.
+        bool Intervention; //! When true, feedback will be provided during the session, otherwise (baseline period) no feedback is provided, device stays in test mode.
 };
 
 #endif // MAINWINDOW_H

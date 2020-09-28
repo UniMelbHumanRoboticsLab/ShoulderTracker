@@ -78,8 +78,8 @@ void UpdateValues_cb(void * param)
         if(mw->Play)
         {
             fprintf(mw->logFile, "%c,%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", assessment_log_letter, mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
-            //Provide audio feedback if required (not in assessment mode)
-            if(!mw->AssessGameWindow->visible())
+            //Provide audio feedback if required (not in assessment mode, not in baseline)
+            if(!mw->SerialCom->IsTesting())
             {
                 if(mw->Mode=='D')
                 {
@@ -365,7 +365,29 @@ void AutoConnectTimer_cb(void * param)
 }
 
 
+//!Prompt to switch between intervention and baseline (therapist use only)
+void SetInterventionButton_cb(Fl_Widget * widget, void * param)
+{
+    MainWindow *mw=(MainWindow*)param;
 
+    fl_message_title("ShoulderTracker");
+    if(mw->Intervention)
+    {
+        if(fl_choice("Are you sure you want to switch to baseline mode?", "Yes, switch", "No, stay in intervention", NULL)==0)
+        {
+            mw->SetToBaseline();
+            fl_alert("Switched to baseline.");
+        }
+    }
+    else
+    {
+        if(fl_choice("Are you sure you want to switch to intervention mode?", "Yes, switch", "No, stay in baseline", NULL)==0)
+        {
+            mw->SetToIntervention();
+            fl_alert("Switched to intervention.");
+        }
+    }
+}
 
 
 MainWindow::MainWindow(mode_type init_mode, bool plotting)
@@ -431,32 +453,45 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
 
     //The minimalist (patient) version
         //Create an FL_Window at the bottom right of the main screen working area
-        int winW=200, winH=110, winX=Fl::x()+Fl::w()-winW, winY=Fl::y()+Fl::h()-winH;
+        int winW=400, winH=310, winX=Fl::x()+Fl::w()-winW, winY=Fl::y()+Fl::h()-winH;
         MinWindow = new Fl_Double_Window(winX, winY, winW, winH, "ShoulderTracker");
         MinWindow->begin();
         //A box for border
-        TitleBox = new Fl_Box(0, 0, winW, 20, "ShoulderTracker");
+        TitleBox = new Fl_Box(0, 0, winW, 40, "ShoulderTracker");
         TitleBox->align(FL_ALIGN_CENTER);
+        TitleBox->labelsize(16);
         TitleBox->box(FL_PLASTIC_UP_BOX);
-        TitleBox->color(FL_DARK_BLUE);
+        TitleBox->color(FL_BLUE);
 
         //Ok indicator
-        OnOffBox = new Fl_Box((winW-60)/2., TitleBox->y()+30, 60, 30);
+        OnOffBox = new Fl_Box((winW-120)/2., TitleBox->y()+TitleBox->h()+20, 120, 120);
         OnOffBox->align(FL_ALIGN_CENTER);
-        OnOffBox->box(FL_ROUNDED_BOX);
+        OnOffBox->box(FL_OVAL_BOX);
         OnOffBox->color(FL_RED);
         OnOffBox->label("OFF");
+        OnOffBox->labelsize(22);
 
         //Running time
-        TimeLabel = new Fl_TimerSimple(FL_VALUE_TIMER, (winW-60)/2., OnOffBox->y()+40, 60, 20, "");
+        TimeLabel = new Fl_TimerSimple(FL_VALUE_TIMER, (winW-100)/2., OnOffBox->y()+OnOffBox->h()+10, 100, 40, "");
         TimeLabel->align(FL_ALIGN_CENTER);
         TimeLabel->box(FL_FLAT_BOX);
+        TimeLabel->labelsize(18);
         TimeLabel->direction(-1);
         TimeLabel->value(10800000.); //Max time in ms: 3*60*60*1000 => 3h
         TimeLabel->suspended(1);
 
+        //Intervention/baseline
+        Preferences = new Fl_Preferences(Fl_Preferences::USER, "ShoulderTrackerIMU", "prefs");
+        ReadInterventionState();
+        if(Intervention)
+            SetInterventionButton = new Fl_Button(winW-80-5, TimeLabel->y()+TimeLabel->h()+5, 80, 40, "Set\nBaseline");
+        else
+            SetInterventionButton = new Fl_Button(winW-80-5, TimeLabel->y()+TimeLabel->h()+5, 80, 40, "Set\nIntervention");
+        SetInterventionButton->callback(SetInterventionButton_cb, (void*)this);
+
         //Quit button (needed or auto ?)
-        QuitButton = new Fl_Button(winW-60-2, winH-20-2, 60, 20, "Quit");
+        QuitButton = new Fl_Button((winW-150)/2., winH-30-5, 150, 30, "QUIT");
+        QuitButton->labelsize(16);
         QuitButton->callback(Quit_cb, (void*)this);
 
         MinWindow->end();
@@ -482,7 +517,7 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
         //Run timer for auto-connect
         Fl::add_timeout(1.0, AutoConnectTimer_cb, (void *)this);
     }
-    AssessGameWindow = new GameWindow(SerialCom);
+    AssessGameWindow = new GameWindow(this);
     WasConnected = false;
     AssessGameWindow->hide(); //Wait for device to connect to show it
 
@@ -492,11 +527,10 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
 
 MainWindow::~MainWindow()
 {
+    delete Preferences;
     //Stop transmission, close connection and destroy Serial
     delete SerialCom;
 }
-
-
 
 
 void MainWindow::GenerateFilename()
@@ -516,4 +550,32 @@ void MainWindow::GenerateFilename()
 
     //Add prefix and extension
     sprintf(Filename, "STLog_%s.csv", timestr);
+}
+
+//! Read preferences to know if in intervention or baseline and set the internal IsIntervention flag (and return true if intervention)
+bool MainWindow::ReadInterventionState()
+{
+    Intervention = false;
+    int val;
+    Preferences->get("IsIntervention", val, (int)Intervention);
+    Intervention = (bool)val;
+    return Intervention;
+}
+
+void MainWindow::SetToIntervention()
+{
+    Intervention = true;
+    Preferences->set("IsIntervention", (int)Intervention);
+    Preferences->flush();
+    SetInterventionButton->label("Set\nBaseline");
+    SetInterventionButton->redraw();
+}
+
+void MainWindow::SetToBaseline()
+{
+    Intervention = false;
+    Preferences->set("IsIntervention", (int)Intervention);
+    Preferences->flush();
+    SetInterventionButton->label("Set\nIntervention");
+    SetInterventionButton->redraw();
 }

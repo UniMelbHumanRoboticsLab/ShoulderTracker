@@ -36,6 +36,7 @@ class Serial
         bool CheckDevice();
         bool SetState(bool play);
         void SetTesting(bool testingmode);
+        bool IsTesting(){return TestingMode;}
         bool SetMode(mode_type mode);
 
         bool GetConnected() { return Connected; }

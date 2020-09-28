@@ -355,7 +355,6 @@ bool Serial::SetState(bool play)
     return false;
 }
 //!Ask to switch to testing mode (true) for recording but no feedback or normal (false)
-//!
 void Serial::SetTesting(bool val)
 {
     TestingMode=val;

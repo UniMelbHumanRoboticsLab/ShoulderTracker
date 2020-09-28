@@ -72,9 +72,12 @@ void UpdateValues_cb(void * param)
         mw->Plot->redraw();
 
         //Log
+        char assessment_log_letter='G';//Set to A for assessment time, G during games
+        if(mw->AssessGameWindow->visible())
+            assessment_log_letter='A';
         if(mw->Play)
         {
-            fprintf(mw->logFile, "%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
+            fprintf(mw->logFile, "%c,%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", assessment_log_letter, mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
             //Provide audio feedback if required (not in assessment mode)
             if(!mw->AssessGameWindow->visible())
             {

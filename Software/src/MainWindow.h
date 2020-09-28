@@ -96,6 +96,7 @@ class MainWindow
         char Mode, State;
         mode_type InitMode;
         bool WasConnected;
+        bool InterventionStarted; //! When true, feedback will be provided during the session, otherwise (baseline period) no feedback is provided, device stays in test mode.
 };
 
 #endif // MAINWINDOW_H

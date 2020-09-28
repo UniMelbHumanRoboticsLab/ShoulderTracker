@@ -23,7 +23,7 @@ unsigned int Int32toInt(unsigned char LLSB, unsigned char LSB, unsigned char HSB
 
 
 
-Serial::Serial(bool quiet)
+Serial::Serial(bool quiet):TestingMode(false)
 {
     //Try any COM port...
     Connected=false;
@@ -302,7 +302,7 @@ bool Serial::CheckDevice()
     return false;
 }
 
-//!Ask for Play (SetState(true)) or Pause (SetState(false))
+//!Ask for Play/Test (SetState(true)) or Pause (SetState(false))
 //!\return true if success
 bool Serial::SetState(bool play)
 {
@@ -315,7 +315,10 @@ bool Serial::SetState(bool play)
         char cmd[4], expected_reply[3];
         if(play)
         {
-            sprintf(cmd, "CDR");
+            if(TestingMode)
+                sprintf(cmd, "CDT");
+            else
+                sprintf(cmd, "CDR");
             sprintf(expected_reply, "OK");
         }
         else
@@ -351,47 +354,13 @@ bool Serial::SetState(bool play)
 
     return false;
 }
-//!Ask for Testing: recording but no feedback
-//!\return true if success
-bool Serial::SetTesting()
+//!Ask to switch to testing mode (true) for recording but no feedback or normal (false)
+//!
+void Serial::SetTesting(bool val)
 {
-    if(Connected)
-    {
-        //Flush buffer
-        RS232_flushRX(PortCom);
-
-        //Send running (CDR) or pause (CDP)
-        char cmd[4], expected_reply[3];
-        sprintf(cmd, "CDT");
-        sprintf(expected_reply, "OK");
-
-        //Send it
-        if(SendChars(cmd, 3)==0)
-        {
-            Sleep(100);//Give time to Arduino to reply: NEEDED
-
-            //Get reply: should be "OKxP" or "OKxR"
-            unsigned char reply[10]={'\0','\0','\0','\0','\0','\0','\0','\0','\0','\0'};
-            if(RS232_PollComport(PortCom, reply, 10)>3);
-            {
-                //Flush buffer
-                RS232_flushRX(PortCom);
-
-                printf("-%s-\n", reply);
-                //Check reply
-                if( strstr((char*)reply, expected_reply) != NULL )
-                    return true;
-            }
-        }
-    }
-    else
-    {
-        //Try to connect and retry
-        if(Connect(true))
-            return SetTesting();
-    }
-
-    return false;
+    TestingMode=val;
+    //Apply
+    SetState(true);
 }
 
 

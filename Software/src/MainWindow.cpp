@@ -153,23 +153,12 @@ void PlayPauseButton_cb(Fl_Widget * widget, void * param)
 
     if(!mw->Play) //Was paused
     {
-        //If in assessment mode (Game window is visible, request test mode, play otherwise)
-        if(mw->AssessGameWindow->visible())
-        {
-            //Ask untill success
-            while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetTesting())
-                Fl::wait(0.1);
+        //Ask untill success
+        while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetState(true))
+            Fl::wait(0.1);
 
-            printf("Testing\n");
-        }
-        else
-        {
-            //Ask untill success
-            while(mw->SerialCom->Connect(true) && !mw->SerialCom->SetState(true))
-                Fl::wait(0.1);
+        printf("Play/Testing\n");
 
-            printf("Play\n");
-        }
         //Reset missed values counter
         mw->NbMissedUpdates=0;
 
@@ -335,7 +324,7 @@ void AutoConnectTimer_cb(void * param)
         if(!mw->WasConnected)
         {
             mw->AssessGameWindow->show();
-            mw->SerialCom->SetTesting();
+            mw->SerialCom->SetTesting(true);
             mw->WasConnected = true;
         }
     }

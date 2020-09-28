@@ -35,7 +35,7 @@ class Serial
         int ReadBinary(char *mode, char *state, float *device_time, float *vals, float *thresh);
         bool CheckDevice();
         bool SetState(bool play);
-        bool SetTesting();
+        void SetTesting(bool testingmode);
         bool SetMode(mode_type mode);
 
         bool GetConnected() { return Connected; }
@@ -44,6 +44,7 @@ class Serial
     private:
         int PortCom;
         bool Connected;
+        bool TestingMode;
 };
 
 #endif // SERIAL_H

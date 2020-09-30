@@ -45,7 +45,7 @@ bool Serial::Connect(bool quiet)
 
     //Try any COM port...
     int baud_rate=19200;
-    for(PortCom=0; PortCom<16; PortCom++)
+    for(PortCom=0; PortCom<10; PortCom++)
     {
         if(!RS232_OpenComport(PortCom, baud_rate, "8N1"))
         {
@@ -73,7 +73,7 @@ bool Serial::Connect(bool quiet)
 
     if(!Connected)
     {
-        printf("Unable to open the port (COM1 - COM16).\n");
+        printf("Unable to open the port (COM1 - COM10).\n");
         if(!quiet)
             fl_alert("Shoulder Tracker not detected.\n\n Is the device ON?\n Have you plugged the USB dongle?\n");
         Connected=false;

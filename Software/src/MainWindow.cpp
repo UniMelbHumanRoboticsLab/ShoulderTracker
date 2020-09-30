@@ -361,7 +361,7 @@ void AutoConnectTimer_cb(void * param)
 
     //Repeat
     if(mw->MinWindow->visible())
-        Fl::repeat_timeout(.2, AutoConnectTimer_cb, param);
+        Fl::repeat_timeout(.5, AutoConnectTimer_cb, param);
 }
 
 
@@ -469,13 +469,13 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
         OnOffBox->box(FL_OVAL_BOX);
         OnOffBox->color(FL_RED);
         OnOffBox->label("OFF");
-        OnOffBox->labelsize(22);
+        OnOffBox->labelsize(28);
 
         //Running time
         TimeLabel = new Fl_TimerSimple(FL_VALUE_TIMER, (winW-100)/2., OnOffBox->y()+OnOffBox->h()+10, 100, 40, "");
         TimeLabel->align(FL_ALIGN_CENTER);
         TimeLabel->box(FL_FLAT_BOX);
-        TimeLabel->labelsize(18);
+        TimeLabel->labelsize(20);
         TimeLabel->direction(-1);
         TimeLabel->value(10800000.); //Max time in ms: 3*60*60*1000 => 3h
         TimeLabel->suspended(1);
@@ -484,9 +484,9 @@ MainWindow::MainWindow(mode_type init_mode, bool plotting)
         Preferences = new Fl_Preferences(Fl_Preferences::USER, "ShoulderTrackerIMU", "prefs");
         ReadInterventionState();
         if(Intervention)
-            SetInterventionButton = new Fl_Button(winW-80-5, TimeLabel->y()+TimeLabel->h()+5, 80, 40, "Set\nBaseline");
+            SetInterventionButton = new Fl_Button(winW-90-5, TimeLabel->y()+TimeLabel->h()+5, 90, 40, "Set\nBaseline");
         else
-            SetInterventionButton = new Fl_Button(winW-80-5, TimeLabel->y()+TimeLabel->h()+5, 80, 40, "Set\nIntervention");
+            SetInterventionButton = new Fl_Button(winW-90-5, TimeLabel->y()+TimeLabel->h()+5, 90, 40, "Set\nIntervention");
         SetInterventionButton->callback(SetInterventionButton_cb, (void*)this);
 
         //Quit button (needed or auto ?)

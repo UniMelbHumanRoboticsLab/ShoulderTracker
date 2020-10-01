@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ShoulderTrackingIMU"
-#define MyAppVersion "0.6"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "The University of Melbourne"
 #define MyAppExeName "ShoulderTrackingIMU.exe"
 
@@ -33,26 +33,24 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "C:\Vincent\Melbourne\ShoulderTrackingIMUs\ShoulderTrackingLog\bin\Win32\ShoulderTrackingIMU.exe"; DestDir: "{app}"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\dpinst-x86.exe"; DestDir: "{app}\drivers"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\dpinst-amd64.exe"; DestDir: "{app}\drivers"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\arduino.cat"; DestDir: "{app}\drivers"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\arduino.inf"; DestDir: "{app}\drivers"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\arduino-org.cat"; DestDir: "{app}\drivers"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\arduino-org.inf"; DestDir: "{app}\drivers"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\x86\libusb0.sys"; DestDir: "{app}\drivers\x86"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\x86\libusb0_x86.dll"; DestDir: "{app}\drivers\x86"; Flags:
-Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.sys"; DestDir: "{app}\drivers\amd64"; Flags: 
-Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.dll"; DestDir: "{app}\drivers\amd64"; Flags:
-Source: "C:\Program Files (x86)\Arduino\drivers\license\libusb0\installer_license.txt"; DestDir: "{app}\drivers\amd64"; Flags:
+Source: "..\bin\Win32\ShoulderTrackingIMU.exe"; DestDir: "{app}"
+Source: "C:\Program Files (x86)\Arduino\drivers\dpinst-x86.exe"; DestDir: "{app}\drivers"
+Source: "C:\Program Files (x86)\Arduino\drivers\dpinst-amd64.exe"; DestDir: "{app}\drivers"
+Source: "C:\Program Files (x86)\Arduino\drivers\arduino.cat"; DestDir: "{app}\drivers"
+Source: "C:\Program Files (x86)\Arduino\drivers\arduino.inf"; DestDir: "{app}\drivers"
+Source: "C:\Program Files (x86)\Arduino\drivers\arduino-org.cat"; DestDir: "{app}\drivers"
+Source: "C:\Program Files (x86)\Arduino\drivers\arduino-org.inf"; DestDir: "{app}\drivers"
+Source: "C:\Program Files (x86)\Arduino\drivers\x86\libusb0.sys"; DestDir: "{app}\drivers\x86"
+Source: "C:\Program Files (x86)\Arduino\drivers\x86\libusb0_x86.dll"; DestDir: "{app}\drivers\x86"
+Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.sys"; DestDir: "{app}\drivers\amd64"
+Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.dll"; DestDir: "{app}\drivers\amd64"
+Source: "C:\Program Files (x86)\Arduino\drivers\license\libusb0\installer_license.txt"; DestDir: "{app}\drivers\amd64"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName} DYNAMIC"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m D"
-Name: "{group}\{#MyAppName} STATIC"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m S"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m D"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName} DYNAMIC"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m D"; Tasks: desktopicon
-Name: "{commondesktop}\{#MyAppName} STATIC"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m S"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m D"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\drivers\dpinst-x86.exe"; WorkingDir: "{app}\drivers"; Check: not IsWin64

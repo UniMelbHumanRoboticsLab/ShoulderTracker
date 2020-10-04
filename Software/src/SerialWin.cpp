@@ -279,6 +279,9 @@ bool Serial::CheckDevice()
         //Flush buffer
         RS232_flushRX(PortCom);
 
+        //Ensure is in pause mode
+        SetState(false);
+
         //Send query (CDQ)
         if(SendChars("CDQ", 3)==0)
         {

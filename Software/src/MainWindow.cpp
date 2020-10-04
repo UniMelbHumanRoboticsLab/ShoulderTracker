@@ -326,8 +326,9 @@ void AutoConnectTimer_cb(void * param)
         //If first time, show game window and set in test mode
         if(!mw->WasConnected)
         {
-            mw->AssessGameWindow->show();
             mw->SerialCom->SetTesting(true);
+            mw->AssessGameWindow->show();
+            mw->AssessGameWindow->SetState(Init);
             mw->WasConnected = true;
         }
     }

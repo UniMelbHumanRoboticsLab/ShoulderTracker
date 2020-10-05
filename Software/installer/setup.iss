@@ -46,7 +46,7 @@ Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.sys"; DestDir: "{a
 Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.dll"; DestDir: "{app}\drivers\amd64"
 Source: "C:\Program Files (x86)\Arduino\drivers\license\libusb0\installer_license.txt"; DestDir: "{app}\drivers\amd64"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: ".\Icon.png"; DestDir: "{app}"; DestName: "icon.png"
+Source: "IconTwo.ico"; DestDir: "{app}"; DestName: "icon"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\icon.png"; Parameters: "-m D"

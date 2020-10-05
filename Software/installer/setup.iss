@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ShoulderTrackingIMU"
-#define MyAppVersion "1.1"
+#define MyAppVersion "2.0"
 #define MyAppPublisher "The University of Melbourne"
 #define MyAppExeName "ShoulderTrackingIMU.exe"
 
@@ -19,8 +19,8 @@ DefaultDirName={pf}\{#MyAppName}
 DisableDirPage=yes
 DefaultGroupName=ShoulderTracking
 DisableProgramGroupPage=yes
-LicenseFile=C:\Vincent\Melbourne\ShoulderTrackingIMUs\ShoulderTrackingLog\installer\License.txt
-OutputDir=C:\Vincent\Melbourne\ShoulderTrackingIMUs\ShoulderTrackingLog\installer
+LicenseFile=.\License.txt
+OutputDir=.\
 OutputBaseFilename=ShoulderTrackingIMU_Setup
 Compression=lzma
 SolidCompression=yes
@@ -46,11 +46,12 @@ Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.sys"; DestDir: "{a
 Source: "C:\Program Files (x86)\Arduino\drivers\amd64\libusb0.dll"; DestDir: "{app}\drivers\amd64"
 Source: "C:\Program Files (x86)\Arduino\drivers\license\libusb0\installer_license.txt"; DestDir: "{app}\drivers\amd64"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: ".\Icon.png"; DestDir: "{app}"; DestName: "icon.png"
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m D"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\icon.png"; Parameters: "-m D"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "-m D"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\icon"; Parameters: "-m D"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\drivers\dpinst-x86.exe"; WorkingDir: "{app}\drivers"; Check: not IsWin64

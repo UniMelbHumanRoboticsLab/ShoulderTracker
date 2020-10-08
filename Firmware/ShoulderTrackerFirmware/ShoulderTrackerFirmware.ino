@@ -20,6 +20,7 @@
  */
 
 #include <Wire.h>
+#include <EEPROM.h> //Used to store magnetometer calibration values
 
 //#define V1_IMU02A //For use with MinIMU-9 v3: https://www.pololu.com/product/2468/
 #define V2_ALTIMUv10 //For use with AltIMU-10 v5: https://www.pololu.com/product/2739
@@ -71,7 +72,7 @@ void Vibrate(float intensity)
   if(intensity==0)
     analogWrite(BuzzPin, 0);
   else
-    analogWrite(BuzzPin, 80+(intensity*(255-80)));
+    analogWrite(BuzzPin, 200+(intensity*(255-200)));
 }
 
 
@@ -404,7 +405,15 @@ void setup()
 	compass.m_max = (LSM303::vector<int16_t>){+1221,   +680,   -610};
 	#endif
 	#ifdef V2_ALTIMUv10
-	//See StaticParam.h
+	//Read values from the EEPROM (use CalibrateMag first)
+  int eeAddress = 0;
+  EEPROM.get(eeAddress, m_min);
+  eeAddress += sizeof(m_min);
+  EEPROM.get(eeAddress, m_max);
+  if(m_min.x==0 || m_max.x==0)
+  {
+    Serial.println("No magnetometer calibration found!");
+  }
 	#endif
 
 	//Action pins
@@ -419,10 +428,11 @@ void setup()
 	Mode=DYNAMIC;Init();
 
   //Serial com
-	Serial.begin(19200);
-	while (!Serial) {
-		; // wait for serial port to connect.
-	}
+  Serial.begin(19200);
+  while (!Serial) {
+    ; // wait for serial port to connect.
+  }
+
 	Pause=true;
   t=micros();
 }

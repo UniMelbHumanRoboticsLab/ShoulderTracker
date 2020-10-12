@@ -22,9 +22,9 @@
 #define ACC_2_MS2 1/16276. //Acceleration convertion to m.s-2
 #include <LIS3MDL.h>
 #include <LSM6.h>
-//Extreme magnetometer values to calibrate
-LIS3MDL::vector<int16_t> m_min = { -4525,  -4806,  -3840};
-LIS3MDL::vector<int16_t> m_max = { +2742,  +2178,  +3343};
+//Extreme magnetometer values to calibrate: retrieve from EEPROM, use CalibrateMag sketch first!
+LIS3MDL::vector<int16_t> m_min = { -4525,  -4806,  -3840};//default values in case no calibration
+LIS3MDL::vector<int16_t> m_max = { +2742,  +2178,  +3343};//default values in case no calibration
 
 #define BuzzPin 5
 #define BeepPin 11

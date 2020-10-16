@@ -78,7 +78,8 @@ void UpdateValues_cb(void * param)
         if(mw->Play)
         {
             fprintf(mw->logFile, "%c,%c,%c,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d\n", assessment_log_letter, mw->Mode, mw->State, t_s, device_time, vals[0], vals[1], vals[2], vals[3], thresholds[0], thresholds[1], MousePosition[0], MousePosition[1]);
-            //Provide audio feedback if required (not in assessment mode, not in baseline)
+            //No audio feedback in this trial
+            /*Provide audio feedback if required (not in assessment mode, not in baseline)
             if(!mw->SerialCom->IsTesting())
             {
                 if(mw->Mode=='D')
@@ -95,7 +96,7 @@ void UpdateValues_cb(void * param)
                         PlaySound(TEXT("reshape.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_NOSTOP);
                     }
                 }
-            }
+            }*/
             Fl::repeat_timeout(0.005, UpdateValues_cb, param);//Ideally 100Hz
         }
     }

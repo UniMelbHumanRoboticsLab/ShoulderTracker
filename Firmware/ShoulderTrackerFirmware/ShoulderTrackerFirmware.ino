@@ -21,6 +21,7 @@
 
 #include <Wire.h>
 #include <EEPROM.h> //Used to store magnetometer calibration values
+#include <LowPower.h> //For sleep mode after inactivity
 
 //#define V1_IMU02A //For use with MinIMU-9 v3: https://www.pololu.com/product/2468/
 #define V2_ALTIMUv10 //For use with AltIMU-10 v5: https://www.pololu.com/product/2739
@@ -31,7 +32,7 @@
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
-#define BINARY_LOG //Optimised faster (binary) log
+//#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;
@@ -57,6 +58,11 @@ float MinimalThresh[2]; //Minimal values: threshold c'ant be lower than these: s
 
 bool Pause;
 bool Testing;
+
+//Sleep mode
+unsigned long int LastActivityInS = 0;
+unsigned long int MaxInactivityBeforeSleepInS = 15*60; //Time of inactivity before device goes to sleep forever (in S)
+
 
 //###################################################################################
 //                              ACTION FUNCTIONS 
@@ -127,6 +133,19 @@ void Beep()
 //-----------------------------------------------------------------------------------
 
 
+
+
+//###################################################################################
+//                                SLEEP FUNCTIONS 
+//###################################################################################
+void GoToSleep()
+{
+  //Sleep forever
+  LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
+}
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
 
 
 //###################################################################################
@@ -282,6 +301,8 @@ void Init()
 			InitDynamic();
 			break;
 	}
+
+  LastActivityInS = millis()/1000.;
 }
 
 //Initialization procedure for static mode: info sound, take reference vectors
@@ -463,6 +484,12 @@ void loop()
   float LinearVelocity=GetLinVel(&Dynamic);
   float AngularVelocity=GetAngVel();
   float diff[2], thresh[2];
+
+  //Check if some movement or inactive (gyro based, above noise level)
+  if( AngularVelocity>0.04 )
+  {
+    LastActivityInS = millis()/1000.;
+  }
   
 	switch(Mode)
 	{
@@ -621,6 +648,14 @@ void loop()
     Serial.flush();
 		while(Serial.available()>0)
 			Serial.read();
+
+    LastActivityInS = millis()/1000.;
 	}
 	#endif
+
+  //Goes to sleep if inactive for too long
+  if( (millis()/1000.) - LastActivityInS > MaxInactivityBeforeSleepInS )
+  {
+    GoToSleep();
+  }
 }

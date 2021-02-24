@@ -32,7 +32,7 @@
 
 //#define MUTE //Sound is annoying when debugging...
 #define LOG //Send values over serial
-//#define BINARY_LOG //Optimised faster (binary) log
+#define BINARY_LOG //Optimised faster (binary) log
 
 
 unsigned long int t, Dt;
@@ -52,7 +52,7 @@ LSM6 gyro; //Gyroscopes and accelerometers
 LIS3MDL compass; //Magnetometers
 #endif
 
-int Sensitivity=90; //0-100%: the higher the less sensitive
+int Sensitivity=85; //0-100%: the higher the less sensitive
 AdaptiveThresholding AdaptThresh[2];
 float MinimalThresh[2]; //Minimal values: threshold c'ant be lower than these: see InitDynamic / InitStatic for values
 
@@ -462,7 +462,7 @@ void setup()
 
 void loop()
 {
-	//Update values from IMU
+  //Update values from IMU
 	compass.read();
 	gyro.read();
   //Fixed update rate of 100Hz
@@ -635,6 +635,17 @@ void loop()
 					Serial.println(header_letters[1]);
 					Init();
 					break;
+        case 'B'://Buzz test
+          Vibrate(0.5);
+          delay(500);
+          Vibrate(0);
+          delay(500);
+          Vibrate(0.8);
+          delay(500);
+          Vibrate(0);
+          Serial.print("OK");
+          Serial.println("B");
+          break;
 				default:
 					Serial.println("E2");
 			}

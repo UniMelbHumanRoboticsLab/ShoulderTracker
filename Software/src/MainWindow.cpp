@@ -22,7 +22,7 @@ void UpdateValues_cb(void * param)
     float vals[4], thresholds[2];
     double t_s;
     struct timeval t1;
-    //if(mw->SerialCom->Read(&mode, &state, &device_time, vals, thresholds)>=0)
+
     if(mw->SerialCom->ReadBinary(&mode, &state, &device_time, vals, thresholds)>=0)
     {
         //Get time to log it

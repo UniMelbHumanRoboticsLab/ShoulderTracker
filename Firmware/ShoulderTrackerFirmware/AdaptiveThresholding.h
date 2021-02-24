@@ -61,7 +61,8 @@
 unsigned char uchar_min(unsigned char a, unsigned char b){return (a<=b ? a:b);}
 unsigned char uchar_max(unsigned char a, unsigned char b){return (a>=b ? a:b);}
 
-#define NB_PTS 150 // (300 => 5min, 150 =>2min30s) WARNING: check memory capacity
+const long int TimePerStoragePtms = 500;
+#define NB_PTS 200 // (For TimePerStoragePtms=1000: 300 => 5min, 150 =>2min30s) WARNING: check memory capacity
 
 
 //###################################################################################
@@ -129,7 +130,7 @@ class AdaptiveThresholding
     void Store(float v)
     { 
       //If we are in the current second
-      if(millis()-StorageT<1000 && millis()-StorageT>0)
+      if(millis()-StorageT<TimePerStoragePtms && millis()-StorageT>0)
       {
          tmpNbVal++;
 
@@ -153,7 +154,9 @@ class AdaptiveThresholding
          #endif
          /*Debug
          Serial.print(millis());Serial.print("ms, ");Serial.print(tmpNbVal);Serial.print("sp, ");Serial.println(tmpAvg);*/
+         //Insert((ValuesType) tmpAvg);
          Insert((ValuesType) tmpMax);
+         
          
          //Reset orig time
          StorageT=millis();
